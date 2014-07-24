@@ -122,6 +122,8 @@ our time slot.
 
 ## Switches
 
+The v1.0 system has the following switches:
+
 - Band Switches (6)
 - Test Switches (1 used, 3 reserved)
 
@@ -137,7 +139,15 @@ The v1.0 system has a single LED for showing GPS and other status.
 
 Switching to a small LCD character display will make operation easier
 and will not greatly increase cost.  An i2c LCD is probably the best
-choice.
+choice.  
+
+There are combination switch/LCD I2C products that we can use and
+avoid the switch overloading by using screen feedback.  For example,
+http://www.adafruit.com/products/772
+
+Or we could use the Akafugu LCD backpack and use a separate mechanism for
+switches.  https://store.akafugu.jp/products/26
+
 
 ## Arduino
 
