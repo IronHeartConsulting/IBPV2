@@ -41,6 +41,7 @@ The aim is a practical design, with few or no new features.
 - ICOM IC-7200 Transceiver
 - New TX Antenna
 - GPS
+- Switches
 - LCD
 - Rig Interface board
 - Power Supply
@@ -60,14 +61,17 @@ per minute followed by four one-second dashes. The callsign and the
 first dash are sent at 100 watts. The remaining dashes are sent at 10
 watts, 1 watt and 100 milliwatts.
 
-The beacons cycle thru the bands from 10m, 15m, and 20m.
+The beacons cycle thru the bands 14 Mhz, 18 MHz, 21 MHz, 24 MHz and 28 MHz.
 
 Each station is given a specific time slot, such that only one
 frequency is needed (on 20m, it’s 14.100).  The unit uses GPS to get
-an accurate time, to synchronize it’s timeslot.
+an accurate time, to synchronize it’s timeslot.  The beacon transmits
+on each band for ten seconds, once every three minutes.
 
+- Check switch for test sqeuence.
 - Monitor the GPS unit - get the current time of day, and monitor the 1PPS signal.  
 - Compute the correct timeslot for the station
+- Check switches for band enable/disable.
 - Send commands via  CI-V / CAT to the radio to select the frequency, and power level via commands
 - Send the callsign and long dashes in CW.
 
@@ -76,6 +80,25 @@ transmission within the hour for each beacon on each frequency, and
 reports the status.
 
 http://www.ncdxf.org/beacon/beaconschedule.html
+
+## Test Mode
+
+Below is the v1.0 test mode
+
+The test sequence is used for adjusting the power levels and checking
+the keying waveforms.  Control the power level and request
+either a string of dots or continual keying by using the switches
+which normally disable particular bands:
+
+| Effect    | Switch  |
+| --------- | ------- |
+| 100 watts | 28 MHz  |
+| 10 watts  | 24 MHz  |
+| 1 watt    | 21 MHz  |
+| 0.1 watt  | 18 MHz  |
+| Dits      | 14 MHz  |
+| Carrier   | 10 MHz  |
+
 
 # Equipment and Components Details 
 
@@ -97,10 +120,24 @@ The GPS data stream will tell us the correct time of day.  Once we
 know that, and our slot ID, we can just init a countdown register to
 our time slot.
 
+## Switches
+
+- Band Switches (6)
+- Test Switches (1 used, 3 reserved)
+
+The band switches control which bands are used.  v1.0 covers 5 bands
+with a 6th slot reserved for 10 MHz.
+
+One test switch controls test mode, and in test mode, the band switches
+have other functions.  Three other switches are reserved.
+
 ## LCD
 
-Most of the units are installed the shack of guests, so having an LCD
-display is helpful.
+The v1.0 system has a single LED for showing GPS and other status.
+
+Switching to a small LCD character display will make operation easier
+and will not greatly increase cost.  An i2c LCD is probably the best
+choice.
 
 ## Arduino
 
