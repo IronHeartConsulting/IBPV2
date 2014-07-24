@@ -146,7 +146,8 @@ avoid the switch overloading by using screen feedback.  For example,
 http://www.adafruit.com/products/772
 
 Or we could use the Akafugu LCD backpack and use a separate mechanism for
-switches.  https://store.akafugu.jp/products/26
+switches.  This product has the advantage that it is mechanically easier
+to mount in case.  https://store.akafugu.jp/products/26
 
 
 ## Arduino
