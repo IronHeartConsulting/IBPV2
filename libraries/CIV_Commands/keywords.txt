@@ -1,0 +1,34 @@
+#######################################
+# Syntax Coloring Map For CIV
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+CIV	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+set_freq_transceive	KEYWORD2
+set_mode_transceive	KEYWORD2
+read_freq	KEYWORD2
+set_freq	KEYWORD2
+set_mode	KEYWORD2
+set_vfomode	KEYWORD2
+set_ReceiveTransmitfunction	KEYWORD2
+set_Togglefunction	KEYWORD2
+toggle_Split	KEYWORD2
+read_radio_response	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+
+#######################################
+# Variables (LITERAL2)
+#######################################
+_src	LITERAL2
+_dst	LITERAL2
