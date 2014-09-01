@@ -1,8 +1,11 @@
-#include "Beacon_Types.h"
+#include "BCNDebug.h"
 #include "CIV_Commands.h"
+int rdio_baudrate = 9600;
 
   //Debug
-  cDebug dbg(dbgRS232_ON);
+  BCNDebug dbg();
+	dbg.RS232DebugON();
+
   //Init radio class
   //Assign controller and radio addresses
   const uint8_t controller_address = 0xE0;    //0xE0
