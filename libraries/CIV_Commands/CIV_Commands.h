@@ -52,7 +52,7 @@ class CIV
 		radio_resp	read_radio_response();
 		uint8_t get_SerialData(uint8_t pdata[]);
 		uint8_t get_nByteData(uint8_t pdata[], boolean bSubCommand);
-		unsigned long BCD_Number(uint8_t pdata[]);
+		unsigned long BCD_Number(uint8_t pdata[], uint8_t data_length);
 		uint8_t _src;															//variable to hold source address - controller
 		uint8_t _dst;															//variable to hold destination address - radio
 		BCNDebug SysDebug;

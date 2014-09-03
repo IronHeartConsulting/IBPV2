@@ -163,10 +163,10 @@ unsigned long CIV::read_freq()
 	Serial1.write(_src);
 	Serial1.write(0x03);
 	EOM();
-	radio_resp response = read_radio_response();
+//	radio_resp response = read_radio_response();
 	
 	uint8_t length = get_nByteData(pdata,false);
-	freq = BCD_Number(pdata);
+	freq = BCD_Number(pdata,length);
 	return freq;
 }
 
@@ -346,10 +346,10 @@ uint8_t CIV::get_nByteData(uint8_t pdata[], boolean bSubCommand)
 /*	CONVERT BCD TO NUMBER						*/
 /*	Purpose: convert BCD data to number			*/
 /************************************************/
-unsigned long CIV::BCD_Number(uint8_t pdata[])
+unsigned long CIV::BCD_Number(uint8_t pdata[],uint8_t data_length)
 {
 	unsigned long number = 0;
-	short length = sizeof(pdata)/sizeof(uint8_t);
+	short length = data_length/sizeof(uint8_t);
 	for(short i = (length - 1); i > -1; i--)//reverse traversing
 	{
 		number = number * 10;				//shift one decade before performing operation

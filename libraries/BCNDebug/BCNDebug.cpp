@@ -16,11 +16,18 @@ void BCNDebug::RS232DebugOFF()
 	debugFlag &= ~dbgRS232ON;
 }
 
+// print out all of our flags to serial
+void BCNDebug::printFlags()
+{
+	Serial.print("Debug flags:");
+	Serial.println(debugFlag,HEX);
+}
+
 // PrintDebug - pointer to data to print, number of bytes to print, and a message to proceed the data
 // will only print if an appropirate debug flag is on
 void BCNDebug::PrintDebug(uint8_t *data, uint8_t length, char *message)
 {
-	if ( (debugFlag & dbgRS232ON) == dbgRS232ON)  
+//	if ( (debugFlag & dbgRS232ON) == dbgRS232ON)  
 		PrintHex83(data, length, message);
 }
 
