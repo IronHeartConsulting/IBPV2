@@ -14,7 +14,7 @@ Version 0.1
   #else
   #include "WProgram.h"
   #endif
-
+#include "BCNDebug.h"
 #include "CIV_Commands.h"
 
 
@@ -23,11 +23,11 @@ Version 0.1
 /*	Purpose: set private variables for source	*/
 /*			and destination addresses			*/
 /************************************************/
-CIV::CIV(uint8_t source, uint8_t dest, cDebug *dbg)
+CIV::CIV(uint8_t source, uint8_t dest, BCNDebug dbg)
 {
 	_src = source;
 	_dst = dest;
-	_debug = dbg;
+	SysDebug = dbg;
 }
 
 
@@ -77,7 +77,7 @@ void CIV::send_nByteData(unsigned long nData, unsigned short width)
 				counter++;
 			}
 		}
-		PrintDebug(pdata, width, "Sent Packet: \0");
+		SysDebug.PrintDebug(pdata, width, "Sent Packet: \0");
 
 	};
 }
@@ -288,7 +288,7 @@ uint8_t CIV::get_SerialData(uint8_t pdata[])
 		}while(pdata[buffer_length - 1] != 0xFD);
 		
 		//debugging stuff
-		PrintDebug(pdata, buffer_length, "Received Raw Packet: \0");
+		SysDebug.PrintDebug(pdata, buffer_length, "Received Raw Packet: \0");
 		}
 	return buffer_length;
 }
@@ -329,7 +329,7 @@ uint8_t CIV::get_nByteData(uint8_t pdata[], boolean bSubCommand)
 					pdata[data_length] = buffer[data_length + start];
 				}
 				//debugging stuff
-				PrintDebug(pdata, data_length, "Payload data: \0");
+				SysDebug.PrintDebug(pdata, data_length, "Payload data: \0");
 
 				break;									//Done, exit for loop
 			}
@@ -359,17 +359,4 @@ unsigned long CIV::BCD_Number(uint8_t pdata[])
 	}
 	return number;
 	
-}
-
-/************************************************/
-/*	PRINT DATA TO DEBUG WINDOW					*/
-/*	Purpose: print data to Serial0 window		*/
-/************************************************/
-void CIV::PrintDebug(uint8_t *pdata,uint8_t data_length, char *message)
-{
-	Serial.print("radio debug state: ");
-	Serial.println(_debug->debugFlag,DEC);
-		
-	if((_debug->debugFlag & dbgRS232_ON) == dbgRS232_ON)
-		_debug->PrintHex83(pdata, data_length, message);
 }

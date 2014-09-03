@@ -1,5 +1,6 @@
-#include "BCNDebug.h"
-#include "CIV_Commands.h"
+#include <BCNDebug.h>
+#include <CIV_Commands.h>
+
 int rdio_baudrate = 9600;
 
   //Debug

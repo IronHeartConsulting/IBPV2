@@ -1,7 +1,5 @@
 #include "Arduino.h"
-#include "Beacon_Types.h"
-
-
+#include "BCNDebug.h"
 
 BCNDebug::BCNDebug()
 {
@@ -22,7 +20,7 @@ void BCNDebug::RS232DebugOFF()
 // will only print if an appropirate debug flag is on
 void BCNDebug::PrintDebug(uint8_t *data, uint8_t length, char *message)
 {
-	if ( (debugFlag & dbgRS232ON) == dbgRS232ON) 
+	if ( (debugFlag & dbgRS232ON) == dbgRS232ON)  
 		PrintHex83(data, length, message);
 }
 
