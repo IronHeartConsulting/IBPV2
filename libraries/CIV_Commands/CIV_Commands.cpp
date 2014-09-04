@@ -350,12 +350,18 @@ unsigned long CIV::BCD_Number(uint8_t pdata[],uint8_t data_length)
 {
 	unsigned long number = 0;
 	short length = data_length/sizeof(uint8_t);
+    Serial.print("BCDlen:");
+    Serial.println(length);
 	for(short i = (length - 1); i > -1; i--)//reverse traversing
 	{
 		number = number * 10;				//shift one decade before performing operation
 		number += (pdata[i] >> 4);			//example 0001 0100 (14 BCD), number = 1
 		number = number * 10;				//number = 10
 		number += ((pdata[i] << 4) >> 4);	//number = 10 + 4
+        Serial.print("BCDLoop:");
+        Serial.print(number);
+        Serial.print(",");
+        Serial.println(pdata[i],HEX);
 	}
 	return number;
 	
