@@ -23,7 +23,7 @@ Version 0.1
 /*	Purpose: set private variables for source	*/
 /*			and destination addresses			*/
 /************************************************/
-CIV::CIV(uint8_t source, uint8_t dest, BCNDebug dbg)
+CIV::CIV(uint8_t source, uint8_t dest, BCNDebug* dbg)
 {
 	_src = source;
 	_dst = dest;
@@ -77,7 +77,7 @@ void CIV::send_nByteData(unsigned long nData, unsigned short width)
 				counter++;
 			}
 		}
-		SysDebug.PrintDebug(pdata, width, "Sent Packet: \0");
+		SysDebug->PrintDebug(pdata, width, "Sent Packet: \0");
 
 	};
 }
@@ -288,7 +288,7 @@ uint8_t CIV::get_SerialData(uint8_t pdata[])
 		}while(pdata[buffer_length - 1] != 0xFD);
 		
 		//debugging stuff
-		SysDebug.PrintDebug(pdata, buffer_length, "Received Raw Packet: \0");
+		SysDebug->PrintDebug(pdata, buffer_length, "Received Raw Packet: \0");
 		}
 	return buffer_length;
 }
@@ -329,7 +329,7 @@ uint8_t CIV::get_nByteData(uint8_t pdata[], boolean bSubCommand)
 					pdata[data_length] = buffer[data_length + start];
 				}
 				//debugging stuff
-				SysDebug.PrintDebug(pdata, data_length, "Payload data: \0");
+				SysDebug->PrintDebug(pdata, data_length, "Payload data: \0");
 
 				break;									//Done, exit for loop
 			}

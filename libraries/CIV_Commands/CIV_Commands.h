@@ -34,7 +34,7 @@ enum xmit_mode{LSB = 0, USB = 1, AM = 2, CW = 3, RTTY = 4, FM = 5};
 class CIV
 {
 	public:
-      CIV(uint8_t source, uint8_t dest, BCNDebug dbg);
+      CIV(uint8_t source, uint8_t dest, BCNDebug* dbg);
 	  
       radio_resp set_freq_transceive(unsigned long freq);						//command code 00
 	  radio_resp set_mode_transceive(xmit_mode mode);							//command code 01
@@ -55,7 +55,7 @@ class CIV
 		unsigned long BCD_Number(uint8_t pdata[], uint8_t data_length);
 		uint8_t _src;															//variable to hold source address - controller
 		uint8_t _dst;															//variable to hold destination address - radio
-		BCNDebug SysDebug;
+		BCNDebug* SysDebug;
 };
 #endif
 

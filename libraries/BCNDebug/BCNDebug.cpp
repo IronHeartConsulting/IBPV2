@@ -4,6 +4,7 @@
 BCNDebug::BCNDebug()
 {
 	//  constructor code goes here
+	debugFlag = 0x00;
 }
 
 // turn on or off various debugging flags
@@ -27,7 +28,7 @@ void BCNDebug::printFlags()
 // will only print if an appropirate debug flag is on
 void BCNDebug::PrintDebug(uint8_t *data, uint8_t length, char *message)
 {
-//	if ( (debugFlag & dbgRS232ON) == dbgRS232ON)  
+	if ( (debugFlag & dbgRS232ON) == dbgRS232ON)  
 		PrintHex83(data, length, message);
 }
 
