@@ -191,7 +191,9 @@ Backup disciplined clock for use when GPS isn't available, for example, indoors.
 
 - Project Management: Kevin K6TD
 - Arduino system: Leigh WA5ZNU
-- Programming: Leigh WA5ZNU
-- Systems Design: ?
-- Hardware Design: ?
+- Rig Control: Kevin K6TD
+- Beacon Event Loop: Leigh WA5ZNU
+- UX: ?
+- Systems Design: Kevin K6TD
+- Hardware Design: Kevin K6TD
 - Testing: ?
