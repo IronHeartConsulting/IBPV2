@@ -1,2 +1,0 @@
-https://github.com/mikalhart/TinyGPS/releases/tag/v13
-http://playground.arduino.cc/uploads/Code/Time.zip

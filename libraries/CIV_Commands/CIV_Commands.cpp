@@ -82,6 +82,35 @@ void CIV::send_nByteData(unsigned long nData, unsigned short width)
 	};
 }
 
+/************************************************/
+/*	convert2BCDBE  Big Endian                   */
+/*	Purpose: send n-bytes to serial interface	*/
+/*			maximum payload is 8 bytes			*/
+/************************************************/
+void CIV::convert2BCDBE(uint8_t *pdata, uint8_t width, unsigned long value)
+{
+	uint8_t bcd[8];
+//	uint8_t pdata[5] = {0x00,0x00,0x00,0x00,0x00};
+	int counter = 0;
+	//Assuming we have an 8 digit number = 14.250.012
+	if(width <= 8)
+	{
+		for(int i = 0; i < width; i++)
+		{	bcd[i] = value % 10;			//convert number to BCD format
+			value /= 10;					//bcd ={2,1,0,0,5,2,4,1}
+			if(i % 2 == 1)					//If odd counter
+			{								//Combines 2 bytes into a single byte
+											//bcd2 = {12,00,25,14}
+				uint8_t bcd2 = (bcd[i] << 4) | bcd[i-1];	//Combines previous bcd with shifted current bcd 
+//				Serial1.write(bcd2);		//Send bcd data
+				pdata[counter] = bcd2;
+				counter++;
+			}
+		}
+		SysDebug->PrintDebug(pdata, width, "2 BCD BE: \0");
+
+	};
+}
 
 /************************************************/
 /*	SET MODE TO ALL								*/
@@ -179,9 +208,25 @@ radio_resp CIV::set_ReceiveTransmitfunction(subcomm_14 subc, uint8_t value)
 	preAmble();
 	Serial1.write(_dst);
 	Serial1.write(_src);
-	Serial1.write(14);
+	Serial1.write(0x14);
 	Serial1.write(subc);
 	Serial1.write(value);
+	EOM();
+	return read_radio_response();
+}
+
+
+/************************************************/
+/*	GET RECEIVE TRANSMIT FUNCTION				*/
+/*	Purpose: read data from the 0x14 cmd set    */
+/************************************************/
+radio_resp CIV::get_ReceiveTransmitfunction(subcomm_14 subc)
+{
+	preAmble();
+	Serial1.write(_dst);
+	Serial1.write(_src);
+	Serial1.write(0x14);
+	Serial1.write(subc);
 	EOM();
 	return read_radio_response();
 }
@@ -196,7 +241,7 @@ radio_resp CIV::set_Togglefunction(subcomm_16 subc, uint8_t value)
 	preAmble();
 	Serial1.write(_dst);
 	Serial1.write(_src);
-	Serial1.write(16);
+	Serial1.write(0x16);
 	Serial1.write(subc);
 	Serial1.write(value);
 	EOM();
@@ -235,10 +280,43 @@ radio_resp CIV::toggle_Split(subcomm_0F mode)							//command code 0F
 }
 
 
+/************************************************/
+/*	set various sliders and modes 				*/
+/*	Purpose: adjust slider value, or change     */
+/*  a setting	                                */
+/************************************************/
+radio_resp CIV::adjustSliders(subcomm_1A slider, uint8_t value)			//command code 1A
+{
+
+	uint8_t pdata[8];
+	preAmble();
+	Serial1.write(_dst);
+	Serial1.write(_src);
+	Serial1.write(0x1A);
+	Serial1.write(0x03);   //note: assume subcmd starts with 03
+	Serial1.write(slider);
+// convert value to format radio is expecting - by slider type
+	switch (slider) {
+		case rfPower:
+// two bytes - 0 to 255, big endian BCD.  Input is a byte
+			convert2BCDBE(&pdata[0], 4, value);
+			Serial1.write(pdata[1]);
+			Serial1.write(pdata[0]);
+			break;
+		default:
+			Serial1.write(value);
+			break;
+	}
+	EOM();
+	return read_radio_response();
+}
+
 
 /************************************************/
 /*	READ RESPONSE FROM RADIO					*/
 /*	Purpose: read response from radio			*/
+/*	                                 			*/
+/*	Note: returned data is lost      			*/
 /************************************************/
 radio_resp	CIV::read_radio_response()
 {

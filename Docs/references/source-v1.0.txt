@@ -1,0 +1,997 @@
+;VERSION 3.01 - 10 DEC 1995
+
+;Resets as soon as one time packet is received which differs from internal
+;clock.  The earlier version waited for three consecutive time packets to
+;indicate the internal clock was wrong.  The earlier version sometimes
+;failed to correct the clock for at least several days and I don't know why.
+
+;VERSION 3.00 - 4 MAY 1995
+
+;NCDXF/IARU beacon controller.
+;Covers five bands: 14, 18, 21, 24 and 28 mHz.
+;Transmit on each band for ten seconds, once every three minutes.
+;GPS receiver used for setting the internal clock and keeping it accurate.
+;Designed for TS-50.  Should work with most Kenwood transcievers.
+
+;The same code is used for all beacons except that the call must be changed
+;on the line starting "mcall:" and the transmit time slot must be changed on
+;the line starting "n	equ"
+
+;This program is for an Intel D8748H microprocessor.  The processor and its
+;instruction set are explained in Intel's book "8-bit Embedded Controller
+;Handbook", pages 1-1 to 1-19, 3-1 to 3-37 and 4-21 to 4-32.
+
+;Port 1 inputs, normal use
+;	p10: not used
+;	p11: 28 mhz disable if on (zero)
+;	p12: 24 mhz disable if on (zero)
+;	p13: 21 mhz disable if on (zero)
+;	p14: 18 mhz disable if on (zero)
+;	p15: 14 mhz disable if on (zero)
+;	p16: reserved for 10 mhz disable if on (zero)
+;	p17: ascii input from GPS
+
+;Port 2 inputs
+;	p20: testing enabled if on (zero) - labeled A
+;	p21: not used - labeled B
+;	p22: not used - labeled C
+;	p23: not used - labeled D
+
+;Port 2 outputs
+;	p24: zero selects ALC bias for 100W
+;	p25: zero selects ALC bias for 10W
+;	p26: zero selects ALC bias for 1W
+;	p27: zero selects ALC bias for 0.1W
+
+;Data bus outputs
+;	db0: zero selects 100W output
+;	db1: zero selects 10W output
+;	db2: zero selects 1W output
+;	db3: zero selects 0.1W output
+;	db4: zero keys rig PTT
+;	db5: zero turns on LED
+;	db6: ascii output to rig
+;	db7: zero keys rig
+
+;External interrupt is once a second pulse from GPS receiver
+
+;************************************************************************
+
+;Entry point for power up.
+
+	jmp	start
+
+;The external interrupt routine responds to the one second pulses
+;from the GPS receiver.  Its main job is to maintain the internal clock which
+;keeps track of the 180 second beacon cycle.  The zero second is the one before
+;the transmission starts.  The external interrupt routine also makes the
+;LED blink if requested by the setting of Bank 1 R5.
+
+;Register Bank 1 is devoted to the interrupt routine:
+
+;	R0	used for accessing data memory
+;	R1	count of seconds in cycle, 0...179
+;	R2	unused
+;	R3	unused
+;	R4	modulo-four blink counter, in high-order two bits
+;	R5	blink rate, in high-order two bits
+;	R6	unused
+;	R7	temp storage for accumulator value at interrupt time
+
+;External interrupt service routine triggered by GPS once a second
+
+	org	003h
+	sel	rb1		;use register bank one during interrupts
+	mov	r7,a		;save the accumulator
+	mov	a,r5		;is this during startup time?
+	jz	int1		;yes, don't blink
+
+;Make LED blink.  Two high bits of R4 control blink rate: 01 for slow,
+;10 for fast.  Two high bits of R5 are a modulo four counter.  The rate
+;is added into the counter and the LED is left on if there is a carry
+;and left off if there is not.  Thus, the fast blink is on for a second
+;and off for a second; the slow blink is on for a second and off for
+;three seconds.
+
+	mov	a,r4		;add blink rate to blink counter
+	add	a,r5
+	mov	r4,a
+	orl	bus,#020h	;turn LED off by setting bit
+	jnc	int1		;if there was no carry, leave it off
+	anl	bus,#0dfh	;turn LED on by clearing bit
+
+;Count the second
+
+int1:	inc	r1		;increment count of seconds in cycle
+	mov	a,r1		;is it the end of the cycle?
+	xrl	a,#180
+	jnz	int2		;no, done
+	mov	r1,#0		;yes, reset count of seconds in cycle
+
+;Return from interrupt
+
+int2:	mov	a,r7		;restore the accumulator
+	retr
+
+;Allocation of data memory.
+
+b1r1	equ	25		;bank 1, R1 is also data memory 25
+b1r5	equ	29		;bank 1, R5 is also data memory 29
+buf	equ	32		;14 bytes for packets from GPS receiver
+
+;Main Program.  Entry point on power up and for reset after clock error.
+
+start:	mov	r0,#63		;clear data memory
+sta1:	mov	@r0,#0
+	djnz	r0,sta1	
+	mov	a,#0ffh		;initialize bus for latched output
+	outl	bus,a
+
+;Go through special test sequences if requested by the switches.  The
+;test sequence is used for adjusting the power levels and checking the
+;keying waveforms.  One can control the power level and request either
+;a string of dots or continual keying by using the switches which normally
+;disable particular bands:
+
+;Power levels: 100 watts - 28 MHz on
+;               10 watts - 24 MHz on
+;                1 watt  - 21 MHz on
+;              0.1 watt  - 18 MHz on
+
+;Request string of dots  - 14 MHz on
+;Request continuous key  - 10 MHz on
+
+test:	in	a,p2		;test mode requested?
+	jb0	check		;no, ignore test sequence
+	anl	bus,#0dfh	;yes, turn on LED
+	in	a,p1		;get test request bits
+	jb1	tes1		;is 100 watt output requested?
+	anl	p2,#0efh	;yes, select ALC bias for 100 watts
+	orl	p2,#0efh
+	anl	bus,#0feh	;set power bits for 100 watts
+	orl	bus,#00eh
+	jmp	tes4
+tes1:	jb2	tes2		;no, is 10 watt output requested?
+	anl	p2,#0dfh	;yes, select ALC bias for 10 watts
+	orl	p2,#0dfh
+	anl	bus,#0fdh	;set power bits for 10 watts
+	orl	bus,#00dh
+	jmp	tes4
+tes2:	jb3	tes3		;is 1 watt output requested?
+	anl	p2,#0bfh	;yes, select ALC bias for 1 watt
+	orl	p2,#0bfh
+	anl	bus,#0fbh	;set power bits for 1 watt
+	orl	bus,#00bh
+	jmp	tes4
+tes3:	jb4	tes4		;is 0.1 watt output requested?
+	anl	p2,#07fh	;yes, select ALC bias for 0.1 watts
+	orl	p2,#07fh
+	anl	bus,#0f7h	;set power bits for 0.1 watt
+	orl	bus,#007h
+tes4:	jb5	tes6		;are dots requested?
+	mov	r0,a		;yes, remember initial test request bits
+	anl	bus,#0efh	;set rig push-to-talk line
+tes5:	call	el		;wait one dot time
+	anl	bus,#07fh	;key rig
+	call	el		;wait one dot time
+	orl	bus,#080h	;stop keying rig
+	in	a,p1		;get test request bits again
+	xrl	a,r0		;have they changed?
+	anl	a,#07eh
+	jz	tes5		;no, send another dot
+	orl	bus,#010h	;yes, release push-to-talk line
+	jmp	test		;go back to process next request
+tes6:	jb6	test		;no, is continuous keying requested?
+	anl	bus,#0efh	;yes, set rig push-to-talk line
+	call	el		;wait one dot time
+	anl	bus,#07fh	;key rig
+	mov	r0,a		;remember initial test request bits
+tes7:	in	a,p1		;get test request bits again
+	xrl	a,r0		;have they changed?
+	anl	a,#07eh
+	jz	tes7		;no, keep keying
+	orl	bus,#010h	;yes, release push-to-talk line
+	orl	bus,#080h	;stop keying rig
+	jmp	test		;go back to process next request
+
+;The check code performs a rudamentary check of the GPS receiver and
+;leaves the LED on with no blinking if a problem is found.  The check
+;code makes sure interrupts and ascii are being received.  This will
+;detect loose connections or a totally dead GPS receiver.
+
+check:	en	i		;enable one-second GPS interrupts
+	anl	bus,#0dfh	;turn on LED until GPS checks OK
+	mov	r0,#b1r1	;address of count of seconds
+chk1:	mov	a,@r0		;is count of seconds still zero?
+	jz	chk1		;yes. wait for it to change
+	in	a,p1		;get present value of ascii line
+	mov	r0,a
+chk2:	in	a,p1		;get present value of ascii line again
+	xrl	a,r0		;has it changed?
+	jb7	init		;yes. done
+	jmp	chk2		;no. wait for it to change
+
+;Start slow blinking to show we are waiting for satellite acquisition.
+
+init:	mov	r0,#b1r5	;request slow blinking
+	mov	@r0,#040h
+
+;Initialize outputs which need to be different from their startup values.
+
+	mov	a,#0efh		;select ALC bias for 100 watts
+	outl	p2,a
+	anl	bus,#0feh	;select 100 watts power
+	anl	bus,#0bfh	;set ascii line to idle state
+
+;The GPS receiver must acquire at least three satellites after it is
+;powered up before it knows where it is.  Until it knows where it is,
+;it doesn't know how to adjust the time for propagation delay.  Once
+;it knows where it is, the time will be accurate even if only one
+;satellite can be heard.  During rare moments when no satellite can
+;be heard, the GPS receiver keeps time using its internal crystal as
+;a time base.
+
+;Wait for a health packet from the GPS receiver indicating it has a fix
+;on where it is.  If the receiver has just been turned on, this may
+;take 15 minutes or so.
+
+;The format of a four-byte GPS receiver health packet is:
+
+;	byte 0:		46 hex: GPS health packet identifier
+;	byte 1:		GPS receiver status - zero means it has a fix
+;	byte 2:		GPS receiver error code (we ignore)
+;	byte 3:		3 hex: ETX
+
+ini1:	mov	r2,#046h	;read a 4-bye health packet
+	mov	r3,#buf+4
+	call	read
+	jz	ini1		;ignore timeouts
+	mov	r0,#buf+1	;does GPS receiver have a fix?
+	mov	a,@r0
+	jnz	ini1		;no, wait until it does
+
+;Get the time from the GPS receiver.  Two successive packets must agree.
+
+ini2:	call	time		;get the time from the GPS receiver
+	jz	ini2		;ignore timeouts
+ini3:	mov	r0,#b1r1	;set the clock with this time
+	mov	a,r1
+	mov	@r0,a
+ini4:	call	time		;get the time again from the GPS receiver
+	jz	ini4		;ignore timeouts
+	mov	r0,#b1r1	;does this time match the clock?
+	mov	a,@r0
+	xrl	a,r1
+	jnz	ini3		;no, try to verify new time
+
+;Initialization finished.
+
+	mov	r0,#b1r5	;yes, request fast blinking
+	mov	@r0,#080h
+
+;Main loop.  Until it is time to transmit, watch for time packets from
+;the GPS receiver and use them to detect that the internal clock needs to
+;be reset after an extra or missing one-second interrupt has corrupted it.
+;Since an occasional time packet may be garbled, the internal clock is
+;considered wrong only if the three consecutive time packets fail to match
+;the internal clock.
+
+;The TIME routine checks the internal clock at least every millisecond
+;and returns a zero as soon as the time of cycle goes to zero.  This
+;condition indicates it is almost time for the beacon to transmit.
+
+main:	call	time		;get the time from the GPS receiver
+	jnz	mai1		;we got a time packet
+	jmp	xmit		;time of cycle went to zero
+
+mai1:	mov	r0,#b1r1	;does this time match the internal clock?
+	mov	a,@r0
+	xrl	a,r1
+	jnz	start		;no, restart program so as to reset clock
+	jmp	main		;yes, keep going
+
+;Transmit on five bands on a three-minute cycle.  14 MHz transmission
+;starts at second 1, followed by 18 MHz, 21 Mhz, 24 Mhz and 28 MHz, at seconds
+;11, 21, 31 and 41.
+
+;Register use:
+
+;	R0	temporary use by subroutines called
+;	R2	next time to act
+;	R3	pointer to ascii for next frequency
+;	R4	mask for disabling transmission on each band
+;	R5-R7	temporary use by subroutines called
+;	F1	one if and only if transmitting on current band is disabled
+
+	org	100h
+xmit:	mov	r2,#0		;set frequency first at second 0
+	mov	r3,#a14-100h	;14MHz is first band
+	in	a,p1		;read switches used for disabling
+	mov	r4,a		;save for testing
+
+;Initialize the transciever for transmitting on this band.
+;The commands are sent in three parts: a prefix, the frequency, and a postfix.
+
+xmi1:	mov	a,#apre-100h	;send first part
+	call	ascii
+	mov	a,r3		;send frequency
+	call	ascii
+	mov	a,#apost-100h	;send last part
+	call	ascii
+	mov	a,r3		;point to frequency for next band
+	add	a,#7		;each is seven bytes long
+	mov	r3,a
+
+;Set F1 to show whether or not transmitting has been disabled on this band.
+
+	mov	a,r4		;move this band's disable bit into position
+	rl	a
+	mov	r4,a
+	clr	f1		;set F1 to complement of disable bit
+	jb6	xmi2
+	cpl	f1
+
+;Wait until it is the second before we should transmit.  (In normal operation
+;there is no reason for this.  It's real purpose is to detect the case where
+;the morse code for the call takes longer than it should so that the program
+;doesn't get here until after the proper time for transmitting.  If such a
+;long call were used, the transmission sequence would be longer than ten
+;seconds per band and on bands after the first, transmitting would start later
+;than advertised.  If one tries to use too long a call, this code will result
+;in transmission on only one band during each three minute cycle.  If this
+;happens, shorten the call.  If that is not possible, the long dashes could
+;be shortened by changing the constant at "lon1:".)
+
+xmi2:	mov	r0,#b1r1	;address of clock
+xmi3:	mov	a,@r0		;get current value of clock
+	xrl	a,r2		;make sure it has not advanced yet
+	jnz	xmi3		;if too late, wait for next time
+
+;Wait for the proper time to transmit.
+
+	inc	r2		;calculate time to transmit
+xmi4:	mov	a,@r0		;get current value of clock
+	xrl	a,r2		;wait for beginning of proper second
+	jnz	xmi4
+	mov	a,r2		;calculate time before next transmission
+	add	a,#9		;which will be in nine more seconds
+	mov	r2,a
+
+;Transmit the beacon sequence on one band.
+
+	anl	bus,#0efh	;key PTT on rig
+	mov	a,#mcall-100h	;transmit call
+	call	morse
+	mov	r7,#4		;finish word space: wait four more els
+xmi5:	call	el
+	djnz	r7,xmi5
+
+	call	long		;transmit one-second long dash
+	mov	a,#0dfh		;select ALC bias for 10 watts
+	outl	p2,a
+	orl	bus,#001h	;deselect 100 watts power
+	anl	bus,#0fdh	;select 10 watts power
+	call	long		;transmit one-second long dash
+	mov	a,#0bfh		;select ALC bias for 1 watt
+	outl	p2,a
+	orl	bus,#002h	;deselect 10 watts power
+	anl	bus,#0fbh	;select 1 watt power
+	call	long		;transmit one-second long dash
+	mov	a,#07fh		;select ALC bias for 0.1 watts
+	outl	p2,a
+	orl	bus,#004h	;deselect 1 watt power
+	anl	bus,#0f7h	;select 0.1 watts power
+	call	long		;transmit one-second long dash
+	mov	a,#0efh		;select ALC bias for 100 watts
+	outl	p2,a
+	orl	bus,#008h	;deselect 0.1 watts power
+	anl	bus,#0feh	;select 100 watts power
+	orl	bus,#010h	;unkey PTT on rig
+
+	mov	a,r3		;is there another band?
+	xrl	a,#apost-100h
+	jnz	xmi1		;yes, transmit on next band
+	jmp	main		;no, start new cycle
+
+;The LONG routine sends a one-second long dash.
+
+long:	jf1	lon1		;unless this band has been disabled
+	anl	bus,#07fh	;start keying rig
+lon1:	mov	r7,#10		;wait 10 x 100 x 400 x 2.5 usec
+lon2:	mov	r6,#100
+lon3:	mov	r5,#198
+	djnz	r5,$
+	djnz	r6,lon3
+	djnz	r7,lon2
+	orl	bus,#080h	;stop keying rig
+	call	el		;wait three element times (letter space)
+	call	el
+	call	el
+	ret
+
+;Kenwood radio commands.  Should work with TS-50, TS-450, TS-850, TS-950.
+
+apre:	db	';'		;clean out any received ascii garbage
+	db	'FA000'		;first part of set VFO A freq
+	db	0
+a14:	db	'141000'		;frequency for 20 meters
+	db	0
+	db	'181100'		;frequency for 17 meters
+	db	0
+	db	'211500'		;frequency for 15 meters
+	db	0
+	db	'249300'		;frequency for 12 meters
+	db	0
+	db	'282000'		;frequency for 10 meters
+	db	0
+apost:	db	'00;'		;last part of set VFO A freq
+	db	'FN0;'		;use VFO A
+	db	'MD3;'		;use CW mode
+	db	'SP0;'		;turn off split if on
+	db	0
+
+;The ASCII routine sends ascii character string terminated with zero byte.
+;The address of the first byte is in accumulator at time of call.
+
+ascii:	mov	r7,a		;save string address
+asc1:	mov	a,r7		;get next byte
+	movp	a,@a
+	jnz	asc2		;end of string?
+	ret			;yes, return
+asc2:	call	achar		;no, send the character as ascii
+	inc	r7		;move to next byte
+	jmp	asc1		;process it
+
+;The ACHAR routine sends one ascii character passed in the accumulator.
+;The character is sent as eight data bits with no parity.  A zero output
+;bit causes nominal 0 volts on the wire, a one causes nominal +5 volts.
+;The start bit is +5 volts; the two stop bits and the idle state are 0
+;volts.  All eight bits of the character are sent, LSB first, a zero bit
+;is +5 volts and a one bit is 0 volts.
+
+achar:	orl	bus,#040h	;send +5 volt start bit
+	call	baud		;for one baud time
+	mov	r5,#8		;count eight data bits
+ach2:	jb0	ach3		;is data bit a one?
+	orl	bus,#040h	;no, send +5 volt data
+	jmp	ach4
+ach3:	anl	bus,#0bfh	;yes, send 0 volt data
+ach4:	call	baud		;for one baud time
+	rr	a		;get next data bit
+	djnz	r5,ach2		;process it
+	anl	bus,#0bfh	;send 0 volt stop bit
+	call	baud		;for one baud time
+	call	baud		;and another
+	ret
+
+;The BAUD routine waits 210 usec = one bit time at 4800 baud.  (Note the
+;84 cycles are calculated based on the loop at ACH2.  The 35 iterations
+;in the BAUD routine make the ACH2 loop take 83 or 85 cycles, depending on
+;the value of the bit.  This is close enough.)
+
+baud:	mov	r6,#35		;84 x 2.5 usec per bit
+	djnz	r6,$
+	ret
+
+;The call to be sent in Morse code.  Must be in upper case!  4U1UN/B is just
+;about the longest call possible.  If too long a call is used, the beacon will
+;transmit on only one band per three minute cycle.  See comment at "xmi2:".
+
+mcall:	db	'YV5B'		;change call here
+	db	0		;mark end of call
+
+;The MORSE routine transmits in morse code an ascii string terminated with
+;a zero byte.  The address of the first byte is in accumulator at time of call.
+;The string can include only capital letters, digits, spaces, slashes and
+;pound signs; the pound sign is sent as "SK".
+
+morse:	mov	r7,a		;save string address
+morse1:	mov	a,r7		;get next byte
+	movp	a,@a
+	jnz	morse2		;end of string?
+	ret			;yes
+morse2:	call	mchar		;no, send the character in morse
+	inc	r7		;move to next byte
+	jmp	morse1		;process it
+
+;The MCHAR routine sends morse code for the ascii character contained in the
+;accumulator.  A lookup table in memory page 3 is used to convert ascii to
+;morse.  In the table, a string of up to seven dots and dashes representing
+;a character in morse code is indicated by a string of up to seven ones and
+;zeroes respectively followed by a one which marks the end.  Thus, three
+;dots would be 11110000, three dashes would be 0001000.
+
+	org	200h
+mchar:	movp3	a,@a		;get morse equivalent from table
+	jnz	mch1		;zero means word space
+	call	el		;wait four more element times for seven total
+	call	el		;(word space = 7 element times)
+	call	el
+	call	el
+	ret			;done
+mch1:	clr	c		;(accumulator is known to be non-zero)
+	rlc	a		;(rightmost one flags end of character)
+	jnz	mch2		;zero means end of character
+	call	el		;wait two more element times for three total
+	call	el		;(letter space = 3 element times)
+	ret			;done
+mch2:	jf1	mch3		;unless this band has been disabled
+	anl	bus,#07fh	;start dot or dash
+mch3:	call	el		;wait one element time
+	jc	mch4		;if this is a dash
+	call	el		;wait two more element times for three total
+	call	el
+mch4:	orl	bus,#080h	;end dot or dash
+	call	el		;wait one element time between dots and dashes
+	jmp	mch1		;back for other dots and dashes
+
+;The EL routine waits for 54 msec = one code element (dot) time at 22.2 wpm.
+;60 msec would be 20 wpm.
+
+el:	mov	r6,#54		;54 x 400 x 2.5 usec
+el1:	mov	r5,#198
+	djnz	r5,$
+	djnz	r6,el1
+	ret
+
+;The TIME routine reads a time packet, subtracts the UTC offset from the
+;GPS time to obtain UTC time, and computes seconds within the current three
+;minute cycle.  If the time of cycle goes to zero before a valid time
+;packet occurs, the routine returns.  On exit, the accumulator is zero if
+;time ran out before a valid time packet came in; when the accumulator is
+;non-zero R1 has the current time as seconds within the cycle.
+
+time:	mov	r2,#041h	;read a 12-byte time packet
+	mov	r3,#buf+12
+	call	read
+	jnz	tim1		;did time of cycle go to zero?
+	ret			;yes, return zero
+
+;The format of the twelve byte time packet is:
+
+;	byte 0:		41 hex: GPS time packet identifier
+;	bytes 1-4:	GPS time: seconds past midnight Saturday.
+;	bytes 5-6:	Week number (not used)
+;	bytes 7-10:	UTC offset: UTC time = GPS time - UTC offset
+;	byte 11:	3 hex: ETX
+
+;The GPS time and UTC offset fields are in 32-bit IEEE floating point format.
+;The FPT routine converts this to a 24-bit integer plus an 8-bit
+;fraction.  FPT does this conversion in place.
+
+tim1:	mov	r0,#buf+1	;no, convert GPS time at buf+1 ... buf+4
+	call	fpt
+	jz	time		;conversion error, ignore packet
+	mov	r0,#buf+7	;convert UTC offset at buf+7 ... buf+10
+	call	fpt
+	jz	time		;conversion error, ignore packet
+
+;A zero UTC offset is not a legal value.  The GPS unit returns a value of
+;zero for the offset if it knows the GPS time but doesn't know the offset yet.
+;This often occurs during the first few time packets after startup.
+
+	mov	r0,#buf+7	;is UTC offset zero?
+	clr	a
+	mov	r1,#4
+tim2:	orl	a,@r0
+	inc	r0
+	djnz	r1,tim2
+	jz	time		;yes, wait until it is nonzero
+
+;Time packets within 1/8 second of the start of a second are ignored
+;so as to be sure that a one-second interrupt won't occur between the
+;time the GPS receiver generated the time packet and the time we finish
+;processing it.  (This was suggested by Art Lange of Trimble.  I don't
+;see why we cannot use times early in the second, but I will assume there
+;is a good reason.)
+
+	mov	r0,#buf+4	;is time less than 1/8 second into second?
+	mov	a,@r0
+	anl	a,#0e0h
+	jz	time		;yes. start over
+	cpl	a		;no. more than 7/8 second into second?
+	anl	a,#0e0h
+	jz	time		;yes. start over
+
+;ADD3 and SUB3 perform triple precision addition and subtraction.  The
+;quantity in R5, R6, R7 is added to or subtracted from the quantity in
+;R2, R3, R4.
+
+	mov	r0,#buf+1	;move integer GPS time to r2, r3, r4
+	mov	a,@r0
+	mov	r2,a
+	inc	r0
+	mov	a,@r0
+	mov	r3,a
+	inc	r0
+	mov	a,@r0
+	mov	r4,a
+	mov	r0,#buf+7	;move integer UTC offset to r5, r6, r7
+	mov	a,@r0
+	mov	r5,a
+	inc	r0
+	mov	a,@r0
+	mov	r6,a
+	inc	r0
+	mov	a,@r0
+	mov	r7,a
+	call	sub3		;subtract UTC offset from GPS time
+
+;The UTC time is adjusted by subtracting the offset for this beacon so that
+;the time of cycle will go to one just as this beacon is to start transmitting.
+;For beacon N, where N is 1...18, the offset for the beacon is (10 * N) - 11.
+;All artithmetic is, in effect, modulo the 180 second cycle length.
+
+;The transmit timeslot within the three minute cycle is determined by
+;the number in the following line.  This number should be between one
+;and eighteen.  4U1UN is number 1; W6WX is number 3.
+
+n	equ	18		;timeslot for this beacon
+
+	mov	r5,#000h	;load 11 = 00000B hex into r5, r6, r7
+	mov	r6,#000h
+	mov	r7,#00Bh
+	call	add3		;add 11 to the UTC time
+	mov	r5,#000h	;load 10 = 00000A hex into r5, r6, r7
+	mov	r6,#000h
+	mov	r7,#00Ah
+	mov	r1,#n		;subtract 10 from the UTC time N times
+tim3:	call	sub3
+	djnz	r1,tim3
+
+;To compute the seconds within a three minute rotation, we could simply
+;subtract 180 from the time as many times as we can, but we might have
+;to do so over 3000 times and that would be very slow.  Instead, we will
+;subtract 60 x 180 = 10800 until the time goes negative and then we will
+;add 180 until the time goes positive again.
+
+	mov	r5,#000h	;load 10,800 = 002A30 hex into r5, r6, r7
+	mov	r6,#02Ah
+	mov	r7,#030h
+tim4:	mov	a,r2		;is time negative?
+	jb7	tim5		;yes, continue
+	call	sub3		;no, subtract 10,800
+	jmp	tim4		;and recheck
+tim5:	mov	r5,#000h	;load 180 = 0000B4 hex into r5, r6, r7
+	mov	r6,#000h
+	mov	r7,#0B4h
+tim6:	call	add3		;add 180
+	mov	a,r2		;is time positive?
+	jb7	tim6		;no. add it again
+
+;The calculation of the time as seconds within the cycle is complete.
+
+	mov	a,r4		;return time in R1
+	mov	r1,a
+	mov	a,#1		;nonzero accumulator indicates success
+	ret	
+	
+	
+
+;FPT routine converts single-precision IEEE floating point numbers to
+;integer plus fraction.  Only numbers in the expected range are handled.
+
+;On entry, R0 contains the address of the first of four bytes of data
+;memory which contain the floating point number.
+
+;On exit, A is zero if the number was not in the expected range and
+;non-zero if the number was converted successfully. In this case, the
+;integer part is in the first three bytes of the four and the fraction
+;part is in the fourth byte
+
+fpt:	mov	a,@r0		;move 32-bits into r1 to r4
+	mov	r1,a
+	inc	r0
+	mov	a,@r0
+	mov	r2,a
+	inc	r0
+	mov	a,@r0
+	mov	r3,a
+	inc	r0
+	mov	a,@r0
+	mov	r4,a
+	mov	a,r1		;is number negative?
+	jb7	fpterr		;yes, but not expected
+	mov	a,r2		;no, put low bit of exponent in carry
+	rlc	a
+	mov	a,r1		;combine with the other seven bits
+	rlc	a
+	mov	r1,a		;save exponent
+	cpl	a		;is exponent FF, a special case?
+	jz	fpterr		;yes, not expected
+	cpl	a		;no, is exponent zero?
+	jnz	fpt1		;no, go process it
+	orl	a,r2		;yes, is this number a real zero?
+	orl	a,r3
+	orl	a,r4
+	jnz	fpterr		;no, then unnormalized, not expected
+	jmp	fpt3		;yes, answer is already zero, return one
+fpt1:	mov	a,#150		;shift amount = 150 - exponent
+				;actually 23 - ( exponent - 127 )
+	cpl	a
+	add	a,r1
+	cpl	a
+	mov	r1,a		;save shift amount
+	add	a,#-3		;is shift amount <= 3?
+	jnc	fpterr		;yes, not expected
+	mov	a,r1		;is shift amount > 23?
+	add	a,#-23
+	jc	fpterr		;yes, not expected
+	mov	r5,#0		;use r2, r3, r4, r5 as 32-bit mantissa
+	mov	a,r2		;insert implicit leading one in mantissa
+	orl	a,#080h
+	mov	r2,a
+
+fpt2:	clr	c		;right shift mantissa one place
+	mov	a,r2
+	rrc	a
+	mov	r2,a
+	mov	a,r3
+	rrc	a
+	mov	r3,a
+	mov	a,r4
+	rrc	a
+	mov	r4,a
+	mov	a,r5
+	rrc	a
+	mov	r5,a
+	djnz	r1,fpt2		;as many times as required
+
+	mov	a,r5		;move answer back to data memory
+	mov	@r0,a
+	dec	r0
+	mov	a,r4
+	mov	@r0,a
+	dec	r0
+	mov	a,r3
+	mov	@r0,a
+	dec	r0
+	mov	a,r2
+	mov	@r0,a
+
+fpt3:	mov	a,#1		;done, return one
+	ret
+
+fpterr: clr	a		;unexpected condition, return zero
+	ret
+
+;Look-up table for ascii to morse code conversion.  This table must go
+;here because the value of the ascii character is used as the address.
+
+	org	320h
+	db	000h		;(space)
+
+	org	323h
+	db	0eah		;"SK"
+
+	org	32fh
+	db	06ch		;/
+	db	004h,084h,0c4h,0e4h,0f4h,0fch,07ch,03ch	;0,1,2,3,4,5,6,7
+	db	01ch,00ch
+
+	org	341h
+	db	0a0h,078h,058h,070h,0c0h,0d8h,030h,0f8h	;a,b,c,d,e,f,g,h
+	db	0e0h,088h,050h,0b8h,020h,060h,010h,098h	;i,j,k,l,m,n,o,p
+	db	028h,0b0h,0f0h,040h,0d0h,0e8h,090h,068h	;q,r,s,t,u,v,w,x
+	db	048h,038h				;y,z
+
+;GPS packet read routine reads packets until the desired packet type and
+;length are encountered or until time of cycle goes to zero indicating
+;that it is time to stop listening.
+
+;On entry, R2 has desired packet type identifier
+;          R3 indicates desired packet length as BUF+length
+
+;On exit, A is zero if time ran out before desired packet came in
+;              non-zero if desired packet is in BUF
+
+;Register use:
+
+;	R0	points to next byte of BUF to be filled
+;	R1	points to bank 1, R0 (the clock)
+;	R2	desired packet type
+;	R3	desired packet length
+;	R4	accumulates data bits
+;	R5	bit 7 calculates parity
+;	R6	counts bits in byte
+;	R7	counts instructions for timing loops
+
+;	F1	one if and only if the previous byte was a DLE
+
+;Data is 9600 bits per second, eight data bits, odd parity, one stop bit.
+;At 9600 bits per second, each bit lasts 104.1 usecs.
+
+;Program checks for time of cycle to become zero in only the two loops
+;which can last more than one character time.
+
+;With a 6 MHz crystal, one instruction cycle takes 2.5 usecs.  The time
+;of each instruction path is carefully adjusted so as to sample each bit
+;at the right time.  If the code is modified, keep this in mind.
+
+	org	360h
+read:	mov	r0,#buf		;store next byte at BUF in data memory
+	mov	r1,#b1r1	;for fast access to time of cycle
+	clr	f1		;haven't seen a DLE just previously
+
+;If we start looking at the wire in the middle of a stream of characters,
+;we won't be able to identify the start bit.  Nine bit times of
+;quiescent input cannot occur during a stream of characters and thus
+;insures that the wire is quiescent.  Quiescent is a one on the wire.
+;A one on the wire is read as a zero and vice versa.
+
+;The wire is often quiescent, but it is not necessarily quiescent between
+;each pair of packets.  The desired packet may well immediately follow an
+;uninteresting packet.  The program must be fast enough in processing an
+;uninteresting packet to not miss the first bit of the immediately following
+;packet.
+
+rea1:	mov	a,@r1		;is time of cycle zero?
+	jnz	rea2		;no, continue
+	ret			;yes, return zero
+rea2:	mov	r7,#63		;(63 x 15 usec = 945 usec = 9 bit times)
+rea3:	in	a,p1		;get complement of wire value
+	jb7	rea1		;wire had zero, start over
+	djnz	r7,rea3		;wire had one, wait for time to be up
+
+;Entry point for catching the next character.  This entry may be used only
+;at approximately the middle of the stop bit of the preceeding character
+;or if the wire is quiescent.
+
+;Wait for zero on wire, the beginning of the start bit.
+
+rea4:	in	a,p1		;get complement of wire value
+	jb7	rea5		;done if wire had zero
+	mov	a,@r1		;is time of cycle zero?
+	jnz	rea4		;no, continue
+	ret			;yes, return zero
+
+;Wait until middle of data bit to sample it.  That is, wait
+;1.5 bit times between rea4 and rea6.
+
+rea5:	mov	r7,#26		;(62 x 2.5 usec = 155 usec between reads)
+	djnz	r7,$
+
+;Accumulate 8 data bits, LSB first, one every bit time.
+
+	mov	r5,#0		;clear the parity
+	mov	r6,#8		;eight bits in data byte
+rea6:	in	a,p1		;get complement of wire value
+	cpl	a		;compute wire value
+	rlc	a		;put it in carry bit
+	mov	a,r4		;shift it into high-order end of r4
+	rrc	a
+	mov	r4,a
+	xrl	a,r5		;compute parity in bit 7 of r5
+	mov	r5,a
+	clr	a		;kill time between bits
+	mov	r7,#14		;(42 x 2.5 usec = 105 usec between reads)
+	djnz	r7,$
+	djnz	r6,rea6		;back to get the next bit
+
+;At next bit time, grab the parity bit and check parity
+
+	in	a,p1		;get complement of wire value
+	xrl	a,r5		;compute complement of parity
+	jb7	read		;even parity is error, get a fresh start
+	jmp	packet		;odd parity is expected
+
+;Now we have a good character; use it to form a packet.
+
+;The DLE character is used as an escape character to mark the first and
+;last byte of each packet.  A DLE followed by an ETX marks the end of
+;the packet.  A DLE followed by a DLE represents a real data value of
+;DLE within the packet.  A DLE followed by anything else is the start
+;of a new packet.
+
+;Wierd algorithm: after buffer is full, a DLE won't be put in
+;the buffer, but it will be "deleted" from the buffer.  The buffer is
+;allocated two bytes longer than the longest interesting packet
+;so a shortened packet will never be considered interesting.
+
+;Timing note: the PACKET code has six transfers back to REA4 to pick
+;up the next character.  The next read at REA4 should occur 10.5 bit
+;times , or 1092.5 usec, after the beginning of the previous start
+;bit was detected at REA4.  At the entry to PACKET, 155 + 8 x 105 + 10
+;= 1005 usecs have already elapsed.  Thus, each path to REA4 should take
+;87.5 usec = 35 instruction cycles.  These cycles are counted in
+;parenthesis in the comments.
+
+DLE	equ	16
+ETX	equ	3
+
+packet:	mov	a,r0		;is buffer full?
+	xrl	a,#buf+14
+	jz	pacy		;yes, don't store this character (5)
+	mov	a,r4		;no, copy character to buffer
+	mov	@r0,a
+	inc	r0		;step through buffer (8)
+pacx:	jf1	pac1		;jump if previous char was a DLE
+	xrl	a,#DLE		;is this char a DLE?
+	jnz	out1		;no, done (14)
+	cpl	f1		;yes, remember it
+	dec	r0		;but delete it from the buffer
+	jmp	out2		;done (18)
+
+pacy:	mov	a,r4		;pick up character to match other path
+	jmp	pacx		;note: both paths to PACX same length (8)
+
+;Previous char was DLE; this char may be special.
+
+pac1:	clr	f1		;clear the record of that DLE (11)
+	xrl	a,#ETX		;is this char an ETX?
+	jz	pac2		;yes, process end of packet
+	mov	a,r4		;no, is it another DLE?
+	xrl	a,#DLE
+	jz	out4		;yes, this byte is real data, done (20)
+	mov	r0,#buf		;no, new packet, reset buffer
+	mov	a,r4		;and insert character
+	mov	@r0,a
+	inc	r0
+	jmp	out6		;done (27)
+
+;The whole packet is here and ready to be processed
+
+pac2:	mov	a,r0		;was this packet the desired length? (16)
+	xrl	a,r3
+	jnz	out3		;no, done with this packet (19)
+	mov	r0,#buf		;yes, set r0 to point to its first byte
+	mov	a,@r0		;is this the desired type of packet?
+	xrl	a,r2
+	jnz	out5		;no, done with this packet (25)
+	mov	a,#1		;yes, return non-zero to report success
+	ret
+
+;Kill time to take up the rest of the cycles.
+
+out1:	in	a,p2		;(16)
+	in	a,p2		;(18)
+out2:	clr	a		;(19)
+out3:	clr	a		;(20)
+out4:	clr	a		;(21)
+	in	a,p2		;(23)
+	in	a,p2		;(25)
+out5:	in	a,p2		;(27)
+out6:	in	a,p2		;(29)
+	in	a,p2		;(31)
+	in	a,p2		;(33)
+	jmp	rea4		;(35)
+
+;Triple precision add of R5, R6, R7 to R2, R3, R4.  R5 and R2
+;are most significant bytes.  If the quantities are considered
+;signed, this is two's complement arithmetic.
+
+
+add3:	mov	a,r7
+	add	a,r4
+	mov	r4,a
+	mov	a,r6
+	addc	a,r3
+	mov	r3,a
+	mov	a,r5
+	addc	a,r2
+	mov	r2,a
+	ret
+
+;Triple precision subtract of R5, R6, R7 from R2, R3, R4.
+;R5 and R2 are most significant bytes.  This is two's complement
+;arithmetic.  The subtrahend is negated by inverting its bits
+;and adding one.  The one is added by inserting a carry when
+;the low order bytes are added.
+
+sub3:	mov	a,r7
+	cpl	a
+	clr	c
+	cpl	c
+	addc	a,r4
+	mov	r4,a
+	mov	a,r6
+	cpl	a
+	addc	a,r3
+	mov	r3,a
+	mov	a,r5
+	cpl	a
+	addc	a,r2
+	mov	r2,a
+	ret
+
+	end

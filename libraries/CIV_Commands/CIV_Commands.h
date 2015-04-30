@@ -29,6 +29,9 @@ enum subcomm_16{togglePreamp = 0x02,AGC = 0x12, toggleNoiseBlanker = 0x22, toggl
                 toggleAutoNotch = 0x41, toggleSpeechComp = 0x44, toggleVOX = 0x46,
                 toggleBREAKin = 0x47, toggleManualNotch = 0x48, toggleTwinPeak = 0x4F, toggleDialLock = 0x50};
 
+// assume's all commands start with 03
+enum subcomm_1A{rfPower = 01, LCDBright = 11, keyerType = 0x42};
+
 enum xmit_mode{LSB = 0, USB = 1, AM = 2, CW = 3, RTTY = 4, FM = 5};
 
 class CIV
@@ -43,8 +46,10 @@ class CIV
 	  radio_resp set_mode(xmit_mode mode);										//command code 06
 	  radio_resp set_vfomode(subcomm_07 mode);									//command code 07
 	  radio_resp set_ReceiveTransmitfunction(subcomm_14 subc, uint8_t value);	//command code 14
+	  radio_resp get_ReceiveTransmitfunction(subcomm_14 subc);					//command code 14
 	  radio_resp set_Togglefunction(subcomm_16 subc, uint8_t value);			//command code 16
 	  radio_resp toggle_Split(subcomm_0F mode);									//command code 0F
+	  radio_resp adjustSliders(subcomm_1A subc, uint8_t value);					//command code 1A
 	private:
 		void preAmble();														//send FEFE
 		void EOM();																//send FD
@@ -53,6 +58,7 @@ class CIV
 		uint8_t get_SerialData(uint8_t pdata[]);
 		uint8_t get_nByteData(uint8_t pdata[], boolean bSubCommand);
 		unsigned long BCD_Number(uint8_t pdata[], uint8_t data_length);
+		void convert2BCDBE(uint8_t *pdata, uint8_t width, unsigned long value);
 		uint8_t _src;															//variable to hold source address - controller
 		uint8_t _dst;															//variable to hold destination address - radio
 		BCNDebug* SysDebug;
