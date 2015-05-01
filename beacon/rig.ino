@@ -1,3 +1,5 @@
+#include "beacon.h"
+
 void setband(byte meters) {
   Serial.print(F("Set band to "));
   Serial.print(meters, DEC);
@@ -20,11 +22,13 @@ void send_id(char *id) {
 }
 
 void txon() {
-    digitalWrite(13, HIGH);
+    digitalWrite(LED, HIGH);
+    digitalWrite(PTTLINE,PTTON);
     Serial.println(F("TX"));
 }
 
 void txoff() {
-    digitalWrite(13, LOW);
+    digitalWrite(LED, LOW);
+    digitalWrite(PTTLINE,PTTOFF);
     Serial.println(F("RX"));
 }

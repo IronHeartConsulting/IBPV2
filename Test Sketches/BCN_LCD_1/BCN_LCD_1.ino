@@ -1,4 +1,5 @@
-/*      ic7200_test Rev 4 - made from - 1, 2, 3
+/*      
+**      Test Beacon and LCD at the same time
 **        
 **      Sample BCN loop
 **          set to 100 watts
@@ -6,19 +7,31 @@
 **          long dash
 **          set to 10 watts
 **          long dash
+**          set to 1 watts
+**          long dash
+**          set to .1 watts
+**          long dash
 **          sleep for 3 minutes
 **
 **      set radio to CW, no breakin/QSK, 14.100
-**      send callsign with CW.  Delay 30 seconds. loop
+**      send callsign with CW.  
 **      
-**      pin assignments:PC6 / Digitla pin 5 - CW line into radio
-**                      PC / Digital pin 12 - PTT output via ACC Connector
+**      pin assignments:
+**			PC6 / Digital pin 5 - CW line into radio
+**          PC  / Digital pin 12 - PTT output via ACC Connector
+**			TX/RX - hard UART to CI-V / IC-7200
+**			6 - BLUE backlight
+**			4 - GREEN 
+**			3 - RED *** CONFLICT ***  don't use - conflicts with SCL pin
 **
 **       check for power control
 */
 #include <BCNDebug.h>
 #include <CIV_Commands.h>
 #include <morse.h>
+#include <Wire.h>
+#include <inttypes.h>
+#include <LCDi2cNHD.h>                    
 
 #define radio_baudrate 4800
 #define CWLINE 5
@@ -26,9 +39,16 @@
 #define PTTON LOW
 #define PTTOFF HIGH
 #define DELAYTIMER 60  // number of seconds to wait for USB serial monitor to connect
+// ??? #define VERSION "1.X"
+
+// output pin numbers for LCD Display backlight colors
+#define BLBLUE  6
+#define BLGREEN 4
+#define BLRED   3
 
 
-  BCNDebug _dbg;
+	BCNDebug _dbg;
+	LCDi2cNHD lcd = LCDi2cNHD(2,16,0x50>>1,0);
  
   //Init radio class
   //Assign controller and radio addresses
@@ -39,6 +59,8 @@
   uint8_t buff[128];
   LEDMorseSender cwBeacon(CWLINE);
   uint8_t waitCount;
+	uint8_t rows = 2;
+	uint8_t cols = 16;
 
 
   
@@ -50,14 +72,27 @@
       delay(1000);   // wait one second
       waitCount++;
     }
-    Serial.println("7200 Read Freq V2.1"); 
+    Serial.println("BCN + LCD+TEST 1 V1.0"); 
     digitalWrite(PTTLINE,PTTOFF);
     pinMode(CWLINE,OUTPUT);
     pinMode(PTTLINE,OUTPUT);
     Serial1.begin(radio_baudrate);    //default IC7200 is 4800
 // Does this belong here or in civ_commands.cpp--CIV?
      _dbg.RS232DebugON();
-    //Initialize radio
+// config and init LCD
+
+  pinMode(BLBLUE,OUTPUT);   // Blue LCD background
+  pinMode(BLGREEN,OUTPUT);   // Green 
+//****  pinMode(BLRED,OUTPUT);   // Red  CONFLICTS with SCL
+  
+  digitalWrite(BLBLUE,LOW);
+  digitalWrite(BLGREEN,HIGH);
+  digitalWrite(BLRED,LOW);
+
+  lcd.init();                          // Init the display, clears the display
+  lcd.print("NCDXF IBPv2  V1.0");      // show the world we are alive
+
+//Initialize radio
     initRadio();
     _dbg.RS232DebugOFF();
 // Set up CW
@@ -89,6 +124,11 @@
             radio.adjustSliders(rfPower,249);
             radio.get_ReceiveTransmitfunction(powRF);
             
+  			digitalWrite(BLBLUE,HIGH);
+  			digitalWrite(BLGREEN,LOW);
+  			digitalWrite(BLRED,LOW);
+			lcd.clear();
+			lcd.print("BCN TXing 14.100");
             digitalWrite(PTTLINE,PTTON);
             cwBeacon.setMessage(String("de k6td"));
             cwBeacon.sendBlocking();
@@ -111,6 +151,11 @@
             
             digitalWrite(PTTLINE,PTTOFF);
             Serial.println("BCN off, waiting for next time slot");
+  			digitalWrite(BLBLUE,LOW);
+  			digitalWrite(BLGREEN,HIGH);
+  			digitalWrite(BLRED,LOW);
+			lcd.clear();
+			lcd.print("BCN Sleeping");
             delay(30000);
   }
   

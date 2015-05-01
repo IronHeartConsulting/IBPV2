@@ -6,11 +6,11 @@
 #include <SoftwareSerial.h>
 
 #include "stations.h"
+#include "beacon.h"
 
 SoftwareSerial gps_serial(8, 7);
 Adafruit_GPS GPS(&gps_serial);
 
-#define GPSECHO false
 
 volatile boolean ticked = false;
 
@@ -52,11 +52,12 @@ void setup()
   Serial.println(F("NCDXC/IARU Beacon IBPV2"));
 
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
-  pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
+  pinMode(PPS, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
   attachInterrupt(0, tick, RISING); // tick happens 0.5s after GPS serial sends the time.
 
   // LED
-  pinMode(13, OUTPUT);             // LED
+  pinMode(LED, OUTPUT);             // LED
+  pinMode(PTTLINE, OUTPUT);    
 
   // GPS Setup 
   {
