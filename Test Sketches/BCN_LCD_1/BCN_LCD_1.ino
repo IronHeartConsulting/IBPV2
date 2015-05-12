@@ -38,7 +38,7 @@
 #define PTTLINE 12
 #define PTTON LOW
 #define PTTOFF HIGH
-#define DELAYTIMER 60  // number of seconds to wait for USB serial monitor to connect
+#define DELAYTIMER 10  // number of seconds to wait for USB serial monitor to connect
 // ??? #define VERSION "1.X"
 
 // output pin numbers for LCD Display backlight colors
