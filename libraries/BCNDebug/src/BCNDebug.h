@@ -2,6 +2,10 @@
 **
 **
 */
+#ifndef ARDUINO_ARCH_AVR
+//  not an arch we support - print errors and exit
+	#error "BCNDebug only supports AVR"
+#else
 #ifndef BCNDebug_h
 #define BCNDebug_h
 #include "Arduino.h"
@@ -23,4 +27,5 @@ class BCNDebug
 		void PrintHex83(uint8_t *data, uint8_t length, char *message);
 };
 
+#endif
 #endif
