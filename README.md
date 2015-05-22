@@ -197,3 +197,12 @@ Backup disciplined clock for use when GPS isn't available, for example, indoors.
 - Systems Design: Kevin K6TD
 - Hardware Design: Kevin K6TD
 - Testing: ?
+
+May 15, 2015
+# libraries used
+SoftSerial
+AdaFruit_GPS
+EnableInterrupt
+LCDi2cNHD
+arduinomorse
+
