@@ -1,3 +1,5 @@
+#include <SoftwareSerial.h>
+
 // Test code for Adafruit GPS modules using MTK3329/MTK3339 driver
 //
 // This code shows how to listen to the GPS module in an interrupt
@@ -19,7 +21,7 @@
                    
 LCDi2cNHD lcd = LCDi2cNHD(2,16,0x50>>1,0);
 
-SoftwareSerial mySerial(8, 7);
+SoftwareSerial mySerial(7,8);
 Adafruit_GPS GPS(&mySerial);
 
 uint8_t rows = 2;
