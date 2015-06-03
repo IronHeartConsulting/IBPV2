@@ -6,24 +6,17 @@
 // desired.
 //
 
+// simple test to see if SSS will work on another TxD pin.
+// We leave RxD on D8 -which is a PCINT pin
+
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
-#include <Wire.h>
-#include <inttypes.h>
-#include <LCDi2cNHD.h> 
 
-// output pin numbers for LCD Display backlight colors
-#define BLBLUE  6
-#define BLGREEN 4
-#define BLRED   3
-                   
-LCDi2cNHD lcd = LCDi2cNHD(2,16,0x50>>1,0);
+// RxD, TxD
+SoftwareSerial mySerial(8, 7);
 
-SoftwareSerial mySerial(8,6);
 Adafruit_GPS GPS(&mySerial);
 
-uint8_t rows = 2;
-uint8_t cols = 16;
 
 // Set GPSECHO to 'false' to turn off echoing the GPS data to the Serial console
 // Set to 'true' if you want to debug and listen to the raw GPS sentences. 
@@ -41,32 +34,9 @@ void setup()
   // also spit it out
   Serial.begin(115200);
   Serial.println("Adafruit GPS library basic test!");
- 
 
   // 9600 NMEA is the default baud rate for Adafruit MTK GPS's- some use 4800
   GPS.begin(9600);
-  
-  // light up the LCD Display
-  pinMode(BLBLUE,OUTPUT);   // Blue LCD background
-  pinMode(BLGREEN,OUTPUT);   // Green 
-  pinMode(BLRED,OUTPUT);   // Red
-  
-  digitalWrite(BLBLUE,HIGH);
-  digitalWrite(BLGREEN,LOW);
-  digitalWrite(BLRED,LOW);
-  
-  // and tell the world Hello
-  lcd.init();
-  lcd.print("Hello DXers");
-  delay(2000);
-  
-  lcd.clear();
-  lcd.print("Satts: "); lcd.print((int)GPS.satellites);
-  lcd.setCursor(1,0);
-  lcd.print("Time: ");
-  lcd.print(GPS.hour, DEC); lcd.print(':');
-  lcd.print(GPS.minute, DEC); lcd.print(':');
-  lcd.print(GPS.seconds, DEC); 
   
   // uncomment this line to turn on RMC (recommended minimum) and GGA (fix data) including altitude
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
@@ -106,10 +76,6 @@ SIGNAL(TIMER0_COMPA_vect) {
 #endif
 }
 
-void ISR_1PPS() {
-  return; 
-}
-  
 void useInterrupt(boolean v) {
   if (v) {
     // Timer0 is already used for millis() - we'll just interrupt somewhere
@@ -167,14 +133,6 @@ void loop()                     // run over and over again
     Serial.print("Fix: "); Serial.print((int)GPS.fix);
     Serial.print(" quality: "); Serial.println((int)GPS.fixquality);
     Serial.print("Satellites: "); Serial.println((int)GPS.satellites); 
-    // update the LCD Display
-    lcd.setCursor(0,7);
-    lcd.print((int)GPS.satellites);
-    lcd.setCursor(1,6);
-    lcd.print(GPS.hour, DEC); lcd.print(':');
-    lcd.print(GPS.minute, DEC); lcd.print(':');
-    lcd.print(GPS.seconds, DEC); 
-   
     if (GPS.fix) {
       Serial.print("Location: ");
       Serial.print(GPS.latitude, 4); Serial.print(GPS.lat);

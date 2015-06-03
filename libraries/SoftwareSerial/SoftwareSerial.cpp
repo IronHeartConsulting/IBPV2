@@ -241,6 +241,10 @@ ISR(PCINT2_vect, ISR_ALIASOF(PCINT0_vect));
 ISR(PCINT3_vect, ISR_ALIASOF(PCINT0_vect));
 #endif
 
+#if defined(INT6_vect)
+ISR(INT6_vect, ISR_ALIASOF(PCINT0_vect));
+#endif
+
 //
 // Constructor
 //
