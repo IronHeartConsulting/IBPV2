@@ -13,7 +13,7 @@
 #include <SoftwareSerial.h>
 
 // RxD, TxD
-SoftwareSerial mySerial(8, 7);
+SoftwareSerial mySerial(8, 6);
 
 Adafruit_GPS GPS(&mySerial);
 
