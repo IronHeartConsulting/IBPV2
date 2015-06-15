@@ -7,8 +7,10 @@
 #include <SoftwareSerial.h>
 
 #include "stations.h"
+#include "beacon.h"
 
-SoftwareSerial gps_serial(8, 7);
+// RxD, TxD
+SoftwareSerial gps_serial(GPSRxD, GPSTxD);
 TinyGPS gps;
 
 #define GPSECHO false
@@ -59,6 +61,11 @@ void tick() {
 
 void setup()  {
 
+	// Kill radio TX as soon as we wake up
+	pinMode(LED, OUTPUT);	// TX on LED
+	pinMode(PTTLINE, OUTPUT);
+	txoff();
+
   // Serial debug output to desktop computer.  For product, send to LCD.
   {
     Serial.begin(115200);
@@ -74,10 +81,8 @@ void setup()  {
 
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
   pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
-  attachInterrupt(0, tick, RISING); // tick happens 0.5s after GPS serial sends the time.
+  attachInterrupt(digitalPinToInterrupt(PPS), tick, RISING); // tick happens 0.5s after GPS serial sends the time.
 
-  // LED on pin13 for debug.  
-  pinMode(13, OUTPUT);
 
   // GPS Setup 
   {
