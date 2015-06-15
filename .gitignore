@@ -2,4 +2,5 @@
 *.gz
 *.bz2
 *.tar
+*.swp
 .DS_Store

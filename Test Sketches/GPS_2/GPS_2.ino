@@ -19,7 +19,7 @@
                    
 LCDi2cNHD lcd = LCDi2cNHD(2,16,0x50>>1,0);
 
-SoftwareSerial mySerial(8,6);
+SoftwareSerial mySerial(11,8);
 Adafruit_GPS GPS(&mySerial);
 
 uint8_t rows = 2;

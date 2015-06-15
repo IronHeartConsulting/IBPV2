@@ -1,3 +1,4 @@
+
 // Adafruit Ultimate GPS module using MTK33x9 chipset
 // http://www.adafruit.com/products/746
 // Arduino Leonardo
@@ -8,7 +9,8 @@
 #include "stations.h"
 #include "beacon.h"
 
-SoftwareSerial gps_serial(8, 7);
+// RxD, TxD
+SoftwareSerial gps_serial(GPSRxD, GPSTxD);
 Adafruit_GPS GPS(&gps_serial);
 
 
@@ -44,6 +46,11 @@ void tick() {
 void setup()  
 {
 
+   // kill radio TX immediately
+  pinMode(LED, OUTPUT);             // LED
+  pinMode(PTTLINE, OUTPUT);  
+  txoff();
+  
   // connect at 115200 so we can read the GPS fast enough and echo without dropping chars
   // also spit it out
   Serial.begin(115200);
@@ -53,11 +60,8 @@ void setup()
 
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
   pinMode(PPS, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
-  attachInterrupt(0, tick, RISING); // tick happens 0.5s after GPS serial sends the time.
-
-  // LED
-  pinMode(LED, OUTPUT);             // LED
-  pinMode(PTTLINE, OUTPUT);    
+  attachInterrupt(digitalPinToInterrupt(PPS), tick, RISING); // tick happens 0.5s after GPS serial sends the time.
+ 
 
   // GPS Setup 
   {

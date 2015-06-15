@@ -30,6 +30,10 @@ boolean gps_discipline_clock(long tries) {
     if (handle_gps_parsing()) {
       // what about GPS.milliseconds?  Should we do this only if it is in a certain range?
       clicks = ((GPS.minute * 60) + GPS.seconds) % (3*60);
+      Serial.print(F("gps.min:gps.sec "));
+      Serial.print(GPS.minute, DEC);
+      Serial.print(F(":"));
+      Serial.println(GPS.seconds, DEC);
       Serial.print(F("handle_gps_parsing says update clicks to "));
       Serial.println(clicks, DEC);
       Serial.flush();
