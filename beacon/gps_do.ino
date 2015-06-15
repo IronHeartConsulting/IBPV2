@@ -15,30 +15,38 @@ boolean gps_discipline_clock(long tries) {
   boolean done = false;
   Serial.println(F("*** GPS Discipline clock start"));
   Serial.flush();
-  // Spend some time trying to get a GPS time.  If we fail, clicks will be messed up.
-  // If we succeed, clicks will be right.
+  // Spend some time trying to get a GPS time.  If we fail, wall_ticks will be messed up.
+  // If we succeed, wall_ticks will be right.
   while (--tries > 0) {
     // attend to GPS in event loop
     // not necessary all the time, but does need to happen to keep time sync
-    char c = GPS.read();
-    if (true) {
-      if (c) {
-        Serial.write(c);   Serial.flush();
-      }
-    }
+    if (gps_serial.available()) {
+      char c = gps_serial.read();
+      if (true) {
+        if (true) {
+          Serial.write(c);   Serial.flush();
+        }
 
-    if (handle_gps_parsing()) {
-      // what about GPS.milliseconds?  Should we do this only if it is in a certain range?
-      clicks = ((GPS.minute * 60) + GPS.seconds) % (3*60);
-      Serial.print(F("gps.min:gps.sec "));
-      Serial.print(GPS.minute, DEC);
-      Serial.print(F(":"));
-      Serial.println(GPS.seconds, DEC);
-      Serial.print(F("handle_gps_parsing says update clicks to "));
-      Serial.println(clicks, DEC);
-      Serial.flush();
-      done = true;
-      break;
+        if (gps.encode(c)) {
+          Serial.println();
+          // what about GPS.milliseconds?  Should we do this only if it is in a certain range?
+          int year;
+          byte month, day, hour, minute, second, hundredths;
+          unsigned long fix_age;
+          gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
+          // about to write into wall_ticks but how do we know we're not about to interrupt?
+          // maybe we should increment it by one and let interrupt write it itself.  that's assuming
+          // the gps decode happens enough before the PPS.
+          wall_ticks = ((minute * 60) + second) % (3*60);
+          Serial.print(F("handle_gps_parsing says update wall_ticks to "));
+          Serial.print(wall_ticks, DEC);
+          Serial.print(F(" fix age "));
+          Serial.print(fix_age);
+          Serial.println(F("ms"));
+          done = true;
+          break;
+        }
+      }
     }
   }
   Serial.print(F("*** GPS Discipline clock done: "));
@@ -46,3 +54,4 @@ boolean gps_discipline_clock(long tries) {
   Serial.flush();
   return done;
 }
+

@@ -3,16 +3,5 @@
 // WPM: speed in WPM
 // WPM=22, DIT=54.55ms, DAH=163.64ms
 
-#include "beacon.h"
-#include "morse.h"
-
-LEDMorseSender cwBeacon(CWLINE);
-
-void send_id(char *id) {
-  Serial.print(F("Send CW "));
-  Serial.println(id);
-  cwBeacon.setMessage(id);
-  cwBeacon.sendBlocking();
+void send_id() {
 }
-
-

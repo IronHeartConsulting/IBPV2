@@ -1,24 +1,22 @@
 void handle_tick() {
-  byte start_time = station.start_time;
-  byte now = clicks;
-  int when = now - start_time;
+  int schedule_ticks = wall_ticks - station.start_time;
 
   // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
 
-  Serial.print(F("Schedule: now=")); Serial.print(now, DEC);
-  Serial.print(F(" start_time=")); Serial.print(start_time, DEC);
-  Serial.print(F(" when=")); Serial.print(when, DEC);
-  Serial.print(F(" next_tx_on_time=")); Serial.println(next_tx_on_time, DEC);
+  Serial.print(F("Schedule: wall_ticks=")); Serial.print(wall_ticks, DEC);
+  Serial.print(F(" schedule_ticks=")); Serial.print(schedule_ticks, DEC);
+  Serial.print(F(" station.start_time=")); Serial.print(station.start_time, DEC);
+  Serial.print(F(" next_tx_click=")); Serial.println(next_tx_click, DEC);
 
-  switch(when) {
+  switch(schedule_ticks) {
   case -20:
     // not beaconing, so do GPS clock discipline.
     gps_discipline_clock(32768);
     break;
 
   case -1:
-    next_tx_on_time = start_time+5;
+    next_tx_click = 5;
     setband(20);
     setpower(50);
     break;
@@ -40,7 +38,7 @@ void handle_tick() {
     // First DAH TX 100W was started by tick; keep it on for 750ms and prepare for next DAH and its power level.
     delay(750);
     txoff();
-    next_tx_on_time++;
+    next_tx_click++;
     setpower(40);
     break;
 
@@ -48,7 +46,7 @@ void handle_tick() {
     // Second DAH TX 10W is already ongoing; keep it on for 750ms and prepare for next DAH and its power level.
     delay(750);
     txoff();
-    next_tx_on_time++;
+    next_tx_click++;
     setpower(30);
     break;
 
@@ -56,7 +54,7 @@ void handle_tick() {
     // Third DAH TX 1W is already ongoing; keep it on for 750ms and prepare for next DAH and its power level.
     delay(750);
     txoff();
-    next_tx_on_time++;
+    next_tx_click++;
     setpower(20);
     break;
 
@@ -64,33 +62,33 @@ void handle_tick() {
     // Fourth DAH TX 0.11W is already ongoing; keep it on for 750ms and prepare for band change.
     delay(750);
     txoff();
-    next_tx_on_time = 255;
+    next_tx_click = 255;
     break;
 
   case 9:
     // Fourth DAH is done.  9th second is silent.  ID on 10th second and start transmitting DAHs on 15th.
-    next_tx_on_time = 15;
+    next_tx_click = 15;
     setband(17);
     setpower(50);
     break;
 
   case 19:
     // Fourth DAH is done.  19th second is silent.  ID on 20th second and start transmitting DAHs on 25th.
-    next_tx_on_time = 25;
+    next_tx_click = 25;
     setband(15);
     setpower(50);
     break;
 
   case 29:
     // Fourth DAH is done.  29th second is silent.  ID on 30th second and start transmitting DAHs on 35th.
-    next_tx_on_time = 35;
+    next_tx_click = 35;
     setband(12);
     setpower(50);
     break;
 
   case 39:
     // Fourth DAH is done.  39th second is silent.  ID on 40th second and start transmitting DAHs on 45th.
-    next_tx_on_time = 45;
+    next_tx_click = 45;
     setband(10);
     setpower(50);
     break;

@@ -1,36 +1,50 @@
-
 // Adafruit Ultimate GPS module using MTK33x9 chipset
 // http://www.adafruit.com/products/746
 // Arduino Leonardo
 
-#include <Adafruit_GPS.h>
+#include <limits.h>
+#include <TinyGPS.h>
 #include <SoftwareSerial.h>
 
 #include "stations.h"
-#include "beacon.h"
 
-// RxD, TxD
-SoftwareSerial gps_serial(GPSRxD, GPSTxD);
-Adafruit_GPS GPS(&gps_serial);
+SoftwareSerial gps_serial(8, 7);
+TinyGPS gps;
 
+#define GPSECHO false
+// turn on only the second sentence (GPRMC)
+#define PMTK_SET_NMEA_OUTPUT_RMCONLY F("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29")
+#define PMTK_SET_NMEA_UPDATE_1HZ  F("$PMTK220,1000*1F")
+#define PMTK_API_SET_FIX_CTL_1HZ  F("$PMTK300,1000,0,0,0,0*1C")
 
 volatile boolean ticked = false;
 
-// Clicks goes from 0-180 because there is a 3-minute beacon schedule.
-volatile byte clicks = 0;
+// wall_ticks counts seconds and goes from 0-180 because there is a 3-minute beacon schedule.
+volatile byte wall_ticks = 0;
 
-volatile byte next_tx_on_time = 255;
+// Set this to the click second at which you want the tick() interrupt handler to key the transmitter.
+volatile byte next_tx_click = 255;
 
+// Set this to true if the tick() interrupt handler to measure update millis_per_second to the most recent value.
+// It should never be on if there is a chance that other interrupts will interfere or if interrupts are disabled, such as during SoftwareSerial output (input is OK).
 volatile boolean disciplining_milliclock = false;
-volatile int last_millis = 0;
+
+// The disciplining value for the milliclock, which really means measuring it and recording millis_per_second.
 volatile int millis_per_second = 0;
+
+// Outside the interrupt, when disciplining the milliclock, update this with the value needed to achieve 750ms.  It starts at 750 and disciplining the milliclock sets this number.
 int seven_fifty_millis = 750;
 
+volatile int last_millis = 0;
+
+// set on id send, reset on band change.  prevents starting up in the middle of the schedule.
+volatile boolean id_sent = false;
+
 // tick interrupt
-// keep track of clicks; GPS will discipline clicks after interrupt disable.
+// keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
-  clicks = (clicks+1) % (3*60);
-  if (clicks == next_tx_on_time) {
+  wall_ticks = (wall_ticks+1) % (3*60);
+  if ((wall_ticks - station.start_time) == next_tx_click) {
     txon();
   }
 
@@ -43,48 +57,42 @@ void tick() {
   ticked = true;
 }
 
-void setup()  
-{
+void setup()  {
 
-   // kill radio TX immediately
-  pinMode(LED, OUTPUT);             // LED
-  pinMode(PTTLINE, OUTPUT);  
-  txoff();
-  
-  // connect at 115200 so we can read the GPS fast enough and echo without dropping chars
-  // also spit it out
-  Serial.begin(115200);
-  while (!Serial) {
+  // Serial debug output to desktop computer.  For product, send to LCD.
+  {
+    Serial.begin(115200);
+
+    // Leonardo requires this.
+    while (!Serial) {
+    }
   }
+
   Serial.println(F("NCDXC/IARU Beacon IBPV2"));
+  Serial.println(station.call);
+
 
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
-  pinMode(PPS, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
-  attachInterrupt(digitalPinToInterrupt(PPS), tick, RISING); // tick happens 0.5s after GPS serial sends the time.
- 
+  pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
+  attachInterrupt(0, tick, RISING); // tick happens 0.5s after GPS serial sends the time.
+
+  // LED on pin13 for debug.  
+  pinMode(13, OUTPUT);
 
   // GPS Setup 
   {
-    GPS.begin(9600);
+    gps_serial.begin(9600);
 
-    // uncomment this line to turn on RMC (recommended minimum) and GGA (fix data) including altitude
-    // GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+    gps_serial.println(PMTK_SET_NMEA_OUTPUT_RMCONLY);
+    gps_serial.println(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz NMEA sentence rate
+    gps_serial.println(PMTK_API_SET_FIX_CTL_1HZ);   // 1 Hz fix rate
 
-    // minimum recommended sentence only
-    GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-
-    GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz update rate
-
-    // GPS.sendCommand(PGCMD_ANTENNA);
     delay(1000);
-
-    // Ask for firmware version
-    // gps_serial.println(PMTK_Q_RELEASE);
   }
 
   do {
     Serial.println(F("*** GPS Discipline clock"));
-  } while (! gps_discipline_clock(131072));
+  } while (! gps_discipline_clock(LONG_MAX));
   Serial.println(F("*** GPS Locked "));
 
   Serial.println(F("*** GPS Discipline Milliclock"));
