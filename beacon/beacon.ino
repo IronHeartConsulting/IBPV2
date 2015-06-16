@@ -107,6 +107,9 @@ void setup()  {
     gps_end_milliclock_discipline();
   }
   Serial.println(F("*** Milliclock disciplined "));
+  
+  Serial.println(F("Radio init"));
+  radioSetup();
 }
 
 void loop()

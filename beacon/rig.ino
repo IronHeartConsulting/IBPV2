@@ -20,6 +20,7 @@ void radioSetup() {
   Serial1.begin(radio_baudrate);
   
 // init the radio
+// ***  _dbg.RS232DebugON();
   radio.set_mode(CW);
   radio.adjustSliders(keyerType,0);  // straight key
   radio.get_ReceiveTransmitfunction(powRF);
@@ -34,7 +35,7 @@ void setband(byte meters) {
   Serial.print(F("Set band to "));
   Serial.print(meters, DEC);
   Serial.println(F("M") );
-  txoff();   // don't even think of QSYing with the RX on
+//  txoff();   // don't even think of QSYing with the RX on
   switch (meters) {
     case 20:
       newFreq = 1410000;
