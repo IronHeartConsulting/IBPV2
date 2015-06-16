@@ -38,22 +38,22 @@ void setband(byte meters) {
 //  txoff();   // don't even think of QSYing with the RX on
   switch (meters) {
     case 20:
-      newFreq = 1410000;
+      newFreq = 14100000;
       break;
     case 17:
-      newFreq = 1810000;
+      newFreq = 18100000;
       break;
     case 15:
-      newFreq = 2115000;
+      newFreq = 21150000;
       break;
     case 12:
-      newFreq = 2493000;
+      newFreq = 24930000;
       break;
     case 10:
-      newFreq = 2820000;
+      newFreq = 28200000;
       break;
     default:
-      newFreq = 2820000;
+      newFreq = 28200000;
       break;
   }
   radio.set_freq(newFreq);  
@@ -97,6 +97,7 @@ void txon() {
     if (id_sent) {
     digitalWrite(LED, HIGH);
     digitalWrite(PTTLINE,PTTON);
+    digitalWrite(CWLINE,HIGH);
     Serial.println(F("TX"));
   } else {
     Serial.println(F("ID Not sent: TX INHIBIT"));
@@ -106,5 +107,6 @@ void txon() {
 void txoff() {
     digitalWrite(LED, LOW);
     digitalWrite(PTTLINE,PTTOFF);
+    digitalWrite(CWLINE,LOW);
     Serial.println(F("RX"));
 }

@@ -3,4 +3,5 @@
 *.bz2
 *.tar
 *.swp
+*.misc
 .DS_Store

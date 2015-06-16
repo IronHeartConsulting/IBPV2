@@ -110,6 +110,7 @@ void setup()  {
   
   Serial.println(F("Radio init"));
   radioSetup();
+  CWSetup();
 }
 
 void loop()

@@ -8,7 +8,7 @@ struct station {
 struct station station =
 //  {  "4U1UN", "United Nations", "UNRC", 0 },
 //  {  "VE8AT", "Canada", "RAC/NARC", 10 },
-{  "W6WX", "United States", "NCDXF", 20 }
+{  "w6wx", "United States", "NCDXF", 20 }
 //  {  "KH6WO", "Hawaii", "KH6BYU", 30 },
 //  {  "ZL6B", "New Zealand", "NZART", 40 },
 //  {  "VK6RBP", "Australia", "WIA", 50 },
