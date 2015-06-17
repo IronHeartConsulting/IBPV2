@@ -17,6 +17,7 @@ void send_id(char *id) {
   Serial.print(F("send CW id:"));
   Serial.println(id);
   digitalWrite(CWLINE,LOW);
+  digitalWrite(PTTLINE,PTTON);
   cwBeacon.setMessage(id);
   //**** cwBeacon.setMessage("k6td");
   cwBeacon.sendBlocking();
