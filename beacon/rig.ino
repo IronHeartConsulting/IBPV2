@@ -80,7 +80,7 @@ void setpower(byte dBm) {
       newPow = 2;
       break;
     default:
-      newPow = 2;
+      newPow = 1;
       break;
   }
   radio.adjustSliders(rfPower,newPow);
@@ -97,6 +97,7 @@ void txon() {
     if (id_sent) {
     digitalWrite(LED, HIGH);
     digitalWrite(PTTLINE,PTTON);
+    FPBLRED
     digitalWrite(CWLINE,HIGH);
     Serial.println(F("TX"));
   } else {
@@ -107,6 +108,7 @@ void txon() {
 void txoff() {
     digitalWrite(LED, LOW);
     digitalWrite(PTTLINE,PTTOFF);
+    FPBLGREEN
     digitalWrite(CWLINE,LOW);
     Serial.println(F("RX"));
 }

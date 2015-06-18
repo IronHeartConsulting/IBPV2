@@ -18,8 +18,8 @@ void send_id(char *id) {
   Serial.println(id);
   digitalWrite(CWLINE,LOW);
   digitalWrite(PTTLINE,PTTON);
+  FPBLRED
   cwBeacon.setMessage(id);
-  //**** cwBeacon.setMessage("k6td");
   cwBeacon.sendBlocking();
   id_sent = true;
 }

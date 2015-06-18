@@ -5,6 +5,9 @@
 #include <limits.h>
 #include <TinyGPS.h>
 #include <SoftwareSerial.h>
+#include <Wire.h>
+#include <inttypes.h>
+#include <LCDi2cNHD.h>
 
 #include "stations.h"
 #include "beacon.h"
@@ -12,6 +15,8 @@
 // RxD, TxD
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);
 TinyGPS gps;
+// rows, columns, I2C address, display (not use, set to zero)
+LCDi2cNHD fp_lcd = LCDi2cNHD(2,16,0x50>>1,0);
 
 #define GPSECHO false
 // turn on only the second sentence (GPRMC)
@@ -66,6 +71,17 @@ void setup()  {
 	pinMode(PTTLINE, OUTPUT);
 	txoff();
 
+	// FP LCD set up
+	pinMode(BLBLUE , OUTPUT);
+	pinMode(BLGREEN, OUTPUT);
+//****	pinMode(BLRED,   OUTPUT);   *** RED pin conflcits with SCL pin
+	
+	FPBLGREEN
+	fp_lcd.init();
+        fp_lcd.cursor_off();
+        FPPRINTRC(0,0,"NCDXF BCN V2.1");
+        FPPRINTRC(1,0,"Waiting SCON");
+
   // Serial debug output to desktop computer.  For product, send to LCD.
   {
     Serial.begin(115200);
@@ -78,7 +94,9 @@ void setup()  {
   Serial.println(F("NCDXC/IARU Beacon IBPV2"));
   Serial.println(station.call);
 
-
+  fp_lcd.setCursor(1,0);   /// 2nd line
+  fp_lcd.print("Initing         ");
+  
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
   pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
   attachInterrupt(digitalPinToInterrupt(PPS), tick, RISING); // tick happens 0.5s after GPS serial sends the time.
@@ -87,7 +105,6 @@ void setup()  {
   // GPS Setup 
   {
     gps_serial.begin(9600);
-
     gps_serial.println(PMTK_SET_NMEA_OUTPUT_RMCONLY);
     gps_serial.println(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz NMEA sentence rate
     gps_serial.println(PMTK_API_SET_FIX_CTL_1HZ);   // 1 Hz fix rate
@@ -111,6 +128,10 @@ void setup()  {
   Serial.println(F("Radio init"));
   radioSetup();
   CWSetup();
+  
+  FPPRINTRC(1,0,station.call);
+  FPPRINTRC(1,7,"in OPER");
+
 }
 
 void loop()
