@@ -129,6 +129,7 @@ void setup()  {
   radioSetup();
   CWSetup();
   
+  FPPRINTRC(1,0,"       ");
   FPPRINTRC(1,0,station.call);
   FPPRINTRC(1,7,"in OPER");
 
