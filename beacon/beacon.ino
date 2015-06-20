@@ -74,13 +74,14 @@ void setup()  {
 	// FP LCD set up
 	pinMode(BLBLUE , OUTPUT);
 	pinMode(BLGREEN, OUTPUT);
-//****	pinMode(BLRED,   OUTPUT);   *** RED pin conflcits with SCL pin
+        pinMode(BLRED,   OUTPUT);   
 	
-	FPBLGREEN
+	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"NCDXF BCN V2.1");
-        FPPRINTRC(1,0,"Waiting SCON");
+        FPPRINTRC(0,0,"V2.2      ");
+        FPPRINTRC(0,7,station.call);
+        FPPRINTRC(1,0,"QRX Serial CNSOL");
 
   // Serial debug output to desktop computer.  For product, send to LCD.
   {
@@ -94,8 +95,7 @@ void setup()  {
   Serial.println(F("NCDXC/IARU Beacon IBPV2"));
   Serial.println(station.call);
 
-  fp_lcd.setCursor(1,0);   /// 2nd line
-  fp_lcd.print("Initing         ");
+  FPPRINTRC(1,0,"QRX INIT      ")
   
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
   pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
@@ -112,6 +112,7 @@ void setup()  {
     delay(1000);
   }
 
+  FPPRINTRC(1,0,"QRX INIT GPS DO")
   do {
     Serial.println(F("*** GPS Discipline clock"));
   } while (! gps_discipline_clock(LONG_MAX));
@@ -125,13 +126,14 @@ void setup()  {
   }
   Serial.println(F("*** Milliclock disciplined "));
   
+  FPPRINTRC(1,0,"QRX INIT RADIO")
   Serial.println(F("Radio init"));
   radioSetup();
   CWSetup();
   
-  FPPRINTRC(1,0,"       ");
-  FPPRINTRC(1,0,station.call);
-  FPPRINTRC(1,7,"in OPER");
+  FPPRINTRC(1,0,"               ");
+  FPPRINTRC(1,0,"OPER");
+  FPBLGREEN
 
 }
 

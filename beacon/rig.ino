@@ -39,21 +39,27 @@ void setband(byte meters) {
   switch (meters) {
     case 20:
       newFreq = 14100000;
+	  FPPRINTRC(1,9,"20");
       break;
     case 17:
       newFreq = 18100000;
+	  FPPRINTRC(1,9,"17");
       break;
     case 15:
       newFreq = 21150000;
+	  FPPRINTRC(1,9,"15");
       break;
     case 12:
       newFreq = 24930000;
+	  FPPRINTRC(1,9,"12");
       break;
     case 10:
       newFreq = 28200000;
+	  FPPRINTRC(1,9,"10");
       break;
     default:
       newFreq = 28200000;
+	  FPPRINTRC(1,9,"ER");
       break;
   }
   radio.set_freq(newFreq);  
@@ -72,15 +78,19 @@ void setpower(byte dBm) {
   switch (dBm) {
     case 50:  // 50 dBm = 100 watts
       newPow = 249;
+	  FPPRINTRC(1,12,"50");
       break;
     case 40:  // 40 dBm = 10 watts
+	  FPPRINTRC(1,12,"40");
       newPow = 30;
       break;
     case 30:  // 30 dBm = 1 watts
       newPow = 2;
+	  FPPRINTRC(1,12,"30");
       break;
     default:
       newPow = 1;
+	  FPPRINTRC(1,12,"20");
       break;
   }
   radio.adjustSliders(rfPower,newPow);

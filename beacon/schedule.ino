@@ -8,6 +8,9 @@ void handle_tick() {
   Serial.print(F(" schedule_ticks=")); Serial.print(schedule_ticks, DEC);
   Serial.print(F(" station.start_time=")); Serial.print(station.start_time, DEC);
   Serial.print(F(" next_tx_click=")); Serial.println(next_tx_click, DEC);
+  char buff[128];
+  sprintf(buff,"%03d",wall_ticks);
+  FPPRINTRC(1,5,buff);
 
   switch(schedule_ticks) {
   case -20:
@@ -17,6 +20,7 @@ void handle_tick() {
 
   case -1:
     next_tx_click = 5;
+    FPPRINTRC(1,8,"        ");
     setband(20);
     setpower(50);
     break;

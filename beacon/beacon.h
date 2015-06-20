@@ -29,10 +29,10 @@
 // Front Panel LCD - I2C comm access, RGB, 16 x 2, NHD P/N .....
 #define BLBLUE	6
 #define BLGREEN	4
-#define BLRED	3
-#define FPBLBLUE  { digitalWrite(BLGREEN, LOW);  /* digitalWrite(BLRED, LOW); */  digitalWrite(BLBLUE, HIGH); }
-#define FPBLGREEN { digitalWrite(BLBLUE, LOW);  /* digitalWrite(BLRED, LOW); */  digitalWrite(BLGREEN, HIGH); }
-#define FPBLRED   { digitalWrite(BLBLUE, LOW);  digitalWrite(BLGREEN, LOW);    /*  digitalWrite(BLRED, HIGH); */ }
+#define BLRED	9
+#define FPBLBLUE  { digitalWrite(BLGREEN, LOW);  digitalWrite(BLRED, LOW);   digitalWrite(BLBLUE, HIGH); }
+#define FPBLGREEN { digitalWrite(BLBLUE, LOW);  digitalWrite(BLRED, LOW);  digitalWrite(BLGREEN, HIGH); }
+#define FPBLRED   { digitalWrite(BLBLUE, LOW);  digitalWrite(BLGREEN, LOW);    digitalWrite(BLRED, HIGH); }
 #define FPPRINTRC(row,col,msg) { fp_lcd.setCursor(row,col); fp_lcd.print(msg); }
 
 // uses the built in I2C hardware and the Wire interface.
