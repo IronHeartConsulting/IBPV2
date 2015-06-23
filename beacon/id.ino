@@ -18,10 +18,12 @@ void send_id(char *id) {
   Serial.println(id);
   digitalWrite(CWLINE,LOW);
   digitalWrite(PTTLINE,PTTON);
+  digitalWrite(LED, HIGH);
   FPBLRED
   cwBeacon.setMessage(id);
   cwBeacon.sendBlocking();
   id_sent = true;
+  digitalWrite(LED, LOW);
 }
 
 void longDAH() {

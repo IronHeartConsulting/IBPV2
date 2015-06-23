@@ -79,7 +79,7 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.2      ");
+        FPPRINTRC(0,0,"V2.3      ");
         FPPRINTRC(0,7,station.call);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
@@ -92,7 +92,7 @@ void setup()  {
     }
   }
 
-  Serial.println(F("NCDXC/IARU Beacon IBPV2"));
+  Serial.println(F("NCDXC/IARU Beacon IBPV2.3"));
   Serial.println(station.call);
 
   FPPRINTRC(1,0,"QRX INIT      ")
