@@ -11,12 +11,22 @@ void gps_end_milliclock_discipline() {
   }
 }
 
+/**
+ * Spend some time trying to get a GPS time.  If we fail, wall_ticks will be messed up.
+ * If we succeed, wall_ticks will be right.
+ *
+ * The GPS SoftwareSerial is off unless we're using it, because 
+ * it generates interrupts, and that would disturb out timing.  This
+ * routine enables here and disables it before exit.
+ */
 boolean gps_discipline_clock(long tries) {
   boolean done = false;
   Serial.println(F("*** GPS Discipline clock start"));
   Serial.flush();
-  // Spend some time trying to get a GPS time.  If we fail, wall_ticks will be messed up.
-  // If we succeed, wall_ticks will be right.
+
+  // Enable SoftwareSerial; disable before exit.
+  gps_serial.listen();
+
   while (--tries > 0) {
     // attend to GPS in event loop
     // not necessary all the time, but does need to happen to keep time sync
@@ -49,9 +59,13 @@ boolean gps_discipline_clock(long tries) {
       }
     }
   }
+
+  gps_serial.stopListening();
+
   Serial.print(F("*** GPS Discipline clock done: "));
   Serial.println(done);
   Serial.flush();
+
   return done;
 }
 
