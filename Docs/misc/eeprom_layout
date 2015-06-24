@@ -1,0 +1,9 @@
+
+EEPROM layout
+
+Leonardo has 1KB of EEPROM
+
+EEPROM[] array is used to read and write the EEPROM, as an array.
+Note - bytes are written one at a time, and take 3.3ms, with a life cycle max of 100,000.
+
+
