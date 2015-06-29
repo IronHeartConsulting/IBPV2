@@ -1,0 +1,513 @@
+NCDXC/IARU Beacon IBPV2.3
+w6wx
+*** GPS Discipline clock
+*** GPS Discipline clock start
+$GPRMC,021435.000,A,3719.5427,N,12203.4716,W,0.32,350.81,250615,,,D*7D
+handle_gps_parsing says update wall_ticks to 155 fix age 55ms
+*** GPS Discipline clock done: 1
+*** GPS Locked 
+*** GPS Discipline Milliclock
+Disciplined 750 millis to 750
+*** Milliclock disciplined 
+Radio init
+Schedule: wall_ticks=161 schedule_ticks=141 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=162 schedule_ticks=142 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=163 schedule_ticks=143 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=164 schedule_ticks=144 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=165 schedule_ticks=145 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=166 schedule_ticks=146 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=167 schedule_ticks=147 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=168 schedule_ticks=148 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=169 schedule_ticks=149 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=170 schedule_ticks=150 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=171 schedule_ticks=151 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=172 schedule_ticks=152 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=173 schedule_ticks=153 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=174 schedule_ticks=154 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=175 schedule_ticks=155 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=176 schedule_ticks=156 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=177 schedule_ticks=157 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=178 schedule_ticks=158 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=179 schedule_ticks=159 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=0 schedule_ticks=-20 station.start_time=20 next_tx_click=255
+*** GPS Discipline clock start
+&‰º¢Âbº±0.86,339.02,250615,,,D*7F
+*** GPS Discipline clock done: 0
+Schedule: wall_ticks=1 schedule_ticks=-19 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=2 schedule_ticks=-18 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=3 schedule_ticks=-17 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=4 schedule_ticks=-16 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=5 schedule_ticks=-15 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=6 schedule_ticks=-14 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=7 schedule_ticks=-13 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=8 schedule_ticks=-12 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=9 schedule_ticks=-11 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=10 schedule_ticks=-10 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=11 schedule_ticks=-9 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=12 schedule_ticks=-8 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=13 schedule_ticks=-7 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=14 schedule_ticks=-6 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=15 schedule_ticks=-5 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=16 schedule_ticks=-4 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=17 schedule_ticks=-3 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=18 schedule_ticks=-2 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=19 schedule_ticks=-1 station.start_time=20 next_tx_click=255
+Set band to 20M
+Set power to 50dBm
+Schedule: wall_ticks=20 schedule_ticks=0 station.start_time=20 next_tx_click=5
+send CW id:w6wx
+Schedule: wall_ticks=22 schedule_ticks=2 station.start_time=20 next_tx_click=5
+Schedule: wall_ticks=23 schedule_ticks=3 station.start_time=20 next_tx_click=5
+Schedule: wall_ticks=24 schedule_ticks=4 station.start_time=20 next_tx_click=5
+TX
+Schedule: wall_ticks=25 schedule_ticks=5 station.start_time=20 next_tx_click=5
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=26 schedule_ticks=6 station.start_time=20 next_tx_click=6
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=27 schedule_ticks=7 station.start_time=20 next_tx_click=7
+RX
+Set power to 20dBm
+Schedule: wall_ticks=28 schedule_ticks=8 station.start_time=20 next_tx_click=8
+RX
+Schedule: wall_ticks=29 schedule_ticks=9 station.start_time=20 next_tx_click=255
+Set band to 17M
+Set power to 50dBm
+Schedule: wall_ticks=30 schedule_ticks=10 station.start_time=20 next_tx_click=15
+send CW id:w6wx
+Schedule: wall_ticks=32 schedule_ticks=12 station.start_time=20 next_tx_click=15
+Schedule: wall_ticks=33 schedule_ticks=13 station.start_time=20 next_tx_click=15
+Schedule: wall_ticks=34 schedule_ticks=14 station.start_time=20 next_tx_click=15
+TX
+Schedule: wall_ticks=35 schedule_ticks=15 station.start_time=20 next_tx_click=15
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=36 schedule_ticks=16 station.start_time=20 next_tx_click=16
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=37 schedule_ticks=17 station.start_time=20 next_tx_click=17
+RX
+Set power to 20dBm
+Schedule: wall_ticks=38 schedule_ticks=18 station.start_time=20 next_tx_click=18
+RX
+Schedule: wall_ticks=39 schedule_ticks=19 station.start_time=20 next_tx_click=255
+Set band to 15M
+Set power to 50dBm
+Schedule: wall_ticks=40 schedule_ticks=20 station.start_time=20 next_tx_click=25
+send CW id:w6wx
+Schedule: wall_ticks=42 schedule_ticks=22 station.start_time=20 next_tx_click=25
+Schedule: wall_ticks=43 schedule_ticks=23 station.start_time=20 next_tx_click=25
+Schedule: wall_ticks=44 schedule_ticks=24 station.start_time=20 next_tx_click=25
+TX
+Schedule: wall_ticks=45 schedule_ticks=25 station.start_time=20 next_tx_click=25
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=46 schedule_ticks=26 station.start_time=20 next_tx_click=26
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=47 schedule_ticks=27 station.start_time=20 next_tx_click=27
+RX
+Set power to 20dBm
+Schedule: wall_ticks=48 schedule_ticks=28 station.start_time=20 next_tx_click=28
+RX
+Schedule: wall_ticks=49 schedule_ticks=29 station.start_time=20 next_tx_click=255
+Set band to 12M
+Set power to 50dBm
+Schedule: wall_ticks=50 schedule_ticks=30 station.start_time=20 next_tx_click=35
+send CW id:w6wx
+Schedule: wall_ticks=52 schedule_ticks=32 station.start_time=20 next_tx_click=35
+Schedule: wall_ticks=53 schedule_ticks=33 station.start_time=20 next_tx_click=35
+Schedule: wall_ticks=54 schedule_ticks=34 station.start_time=20 next_tx_click=35
+TX
+Schedule: wall_ticks=55 schedule_ticks=35 station.start_time=20 next_tx_click=35
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=56 schedule_ticks=36 station.start_time=20 next_tx_click=36
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=57 schedule_ticks=37 station.start_time=20 next_tx_click=37
+RX
+Set power to 20dBm
+Schedule: wall_ticks=58 schedule_ticks=38 station.start_time=20 next_tx_click=38
+RX
+Schedule: wall_ticks=59 schedule_ticks=39 station.start_time=20 next_tx_click=255
+Set band to 10M
+Set power to 50dBm
+Schedule: wall_ticks=60 schedule_ticks=40 station.start_time=20 next_tx_click=45
+send CW id:w6wx
+Schedule: wall_ticks=62 schedule_ticks=42 station.start_time=20 next_tx_click=45
+Schedule: wall_ticks=63 schedule_ticks=43 station.start_time=20 next_tx_click=45
+Schedule: wall_ticks=64 schedule_ticks=44 station.start_time=20 next_tx_click=45
+TX
+Schedule: wall_ticks=65 schedule_ticks=45 station.start_time=20 next_tx_click=45
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=66 schedule_ticks=46 station.start_time=20 next_tx_click=46
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=67 schedule_ticks=47 station.start_time=20 next_tx_click=47
+RX
+Set power to 20dBm
+Schedule: wall_ticks=68 schedule_ticks=48 station.start_time=20 next_tx_click=48
+RX
+Schedule: wall_ticks=69 schedule_ticks=49 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=70 schedule_ticks=50 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=71 schedule_ticks=51 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=72 schedule_ticks=52 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=73 schedule_ticks=53 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=74 schedule_ticks=54 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=75 schedule_ticks=55 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=76 schedule_ticks=56 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=77 schedule_ticks=57 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=78 schedule_ticks=58 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=79 schedule_ticks=59 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=80 schedule_ticks=60 station.start_time=20 next_tx_click=255
+*** GPS Discipline clock start
+Š¢’rªªb’ª‚²Šªbbb"©77
+*** GPS Discipline clock done: 0
+Schedule: wall_ticks=81 schedule_ticks=61 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=82 schedule_ticks=62 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=83 schedule_ticks=63 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=84 schedule_ticks=64 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=85 schedule_ticks=65 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=86 schedule_ticks=66 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=87 schedule_ticks=67 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=88 schedule_ticks=68 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=89 schedule_ticks=69 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=90 schedule_ticks=70 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=91 schedule_ticks=71 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=92 schedule_ticks=72 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=93 schedule_ticks=73 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=94 schedule_ticks=74 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=95 schedule_ticks=75 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=96 schedule_ticks=76 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=97 schedule_ticks=77 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=98 schedule_ticks=78 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=99 schedule_ticks=79 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=100 schedule_ticks=80 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=101 schedule_ticks=81 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=102 schedule_ticks=82 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=103 schedule_ticks=83 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=104 schedule_ticks=84 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=105 schedule_ticks=85 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=106 schedule_ticks=86 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=107 schedule_ticks=87 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=108 schedule_ticks=88 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=109 schedule_ticks=89 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=110 schedule_ticks=90 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=111 schedule_ticks=91 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=112 schedule_ticks=92 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=113 schedule_ticks=93 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=114 schedule_ticks=94 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=115 schedule_ticks=95 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=116 schedule_ticks=96 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=117 schedule_ticks=97 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=118 schedule_ticks=98 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=119 schedule_ticks=99 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=120 schedule_ticks=100 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=121 schedule_ticks=101 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=122 schedule_ticks=102 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=123 schedule_ticks=103 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=124 schedule_ticks=104 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=125 schedule_ticks=105 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=126 schedule_ticks=106 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=127 schedule_ticks=107 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=128 schedule_ticks=108 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=129 schedule_ticks=109 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=130 schedule_ticks=110 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=131 schedule_ticks=111 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=132 schedule_ticks=112 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=133 schedule_ticks=113 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=134 schedule_ticks=114 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=135 schedule_ticks=115 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=136 schedule_ticks=116 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=137 schedule_ticks=117 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=138 schedule_ticks=118 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=139 schedule_ticks=119 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=140 schedule_ticks=120 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=141 schedule_ticks=121 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=142 schedule_ticks=122 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=143 schedule_ticks=123 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=144 schedule_ticks=124 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=145 schedule_ticks=125 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=146 schedule_ticks=126 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=147 schedule_ticks=127 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=148 schedule_ticks=128 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=149 schedule_ticks=129 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=150 schedule_ticks=130 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=151 schedule_ticks=131 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=152 schedule_ticks=132 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=153 schedule_ticks=133 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=154 schedule_ticks=134 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=155 schedule_ticks=135 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=156 schedule_ticks=136 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=157 schedule_ticks=137 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=158 schedule_ticks=138 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=159 schedule_ticks=139 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=160 schedule_ticks=140 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=161 schedule_ticks=141 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=162 schedule_ticks=142 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=163 schedule_ticks=143 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=164 schedule_ticks=144 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=165 schedule_ticks=145 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=166 schedule_ticks=146 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=167 schedule_ticks=147 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=168 schedule_ticks=148 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=169 schedule_ticks=149 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=170 schedule_ticks=150 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=171 schedule_ticks=151 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=172 schedule_ticks=152 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=173 schedule_ticks=153 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=174 schedule_ticks=154 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=175 schedule_ticks=155 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=176 schedule_ticks=156 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=177 schedule_ticks=157 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=178 schedule_ticks=158 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=179 schedule_ticks=159 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=0 schedule_ticks=-20 station.start_time=20 next_tx_click=255
+*** GPS Discipline clock start
+šr¢ºŠŠbº±1.46,186.04,250615,,,D*76
+*** GPS Discipline clock done: 0
+Schedule: wall_ticks=1 schedule_ticks=-19 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=2 schedule_ticks=-18 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=3 schedule_ticks=-17 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=4 schedule_ticks=-16 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=5 schedule_ticks=-15 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=6 schedule_ticks=-14 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=7 schedule_ticks=-13 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=8 schedule_ticks=-12 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=9 schedule_ticks=-11 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=10 schedule_ticks=-10 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=11 schedule_ticks=-9 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=12 schedule_ticks=-8 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=13 schedule_ticks=-7 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=14 schedule_ticks=-6 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=15 schedule_ticks=-5 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=16 schedule_ticks=-4 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=17 schedule_ticks=-3 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=18 schedule_ticks=-2 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=19 schedule_ticks=-1 station.start_time=20 next_tx_click=255
+Set band to 20M
+Set power to 50dBm
+Schedule: wall_ticks=20 schedule_ticks=0 station.start_time=20 next_tx_click=5
+send CW id:w6wx
+Schedule: wall_ticks=22 schedule_ticks=2 station.start_time=20 next_tx_click=5
+Schedule: wall_ticks=23 schedule_ticks=3 station.start_time=20 next_tx_click=5
+Schedule: wall_ticks=24 schedule_ticks=4 station.start_time=20 next_tx_click=5
+TX
+Schedule: wall_ticks=25 schedule_ticks=5 station.start_time=20 next_tx_click=5
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=26 schedule_ticks=6 station.start_time=20 next_tx_click=6
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=27 schedule_ticks=7 station.start_time=20 next_tx_click=7
+RX
+Set power to 20dBm
+Schedule: wall_ticks=28 schedule_ticks=8 station.start_time=20 next_tx_click=8
+RX
+Schedule: wall_ticks=29 schedule_ticks=9 station.start_time=20 next_tx_click=255
+Set band to 17M
+Set power to 50dBm
+Schedule: wall_ticks=30 schedule_ticks=10 station.start_time=20 next_tx_click=15
+send CW id:w6wx
+Schedule: wall_ticks=32 schedule_ticks=12 station.start_time=20 next_tx_click=15
+Schedule: wall_ticks=33 schedule_ticks=13 station.start_time=20 next_tx_click=15
+Schedule: wall_ticks=34 schedule_ticks=14 station.start_time=20 next_tx_click=15
+TX
+Schedule: wall_ticks=35 schedule_ticks=15 station.start_time=20 next_tx_click=15
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=36 schedule_ticks=16 station.start_time=20 next_tx_click=16
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=37 schedule_ticks=17 station.start_time=20 next_tx_click=17
+RX
+Set power to 20dBm
+Schedule: wall_ticks=38 schedule_ticks=18 station.start_time=20 next_tx_click=18
+RX
+Schedule: wall_ticks=39 schedule_ticks=19 station.start_time=20 next_tx_click=255
+Set band to 15M
+Set power to 50dBm
+Schedule: wall_ticks=40 schedule_ticks=20 station.start_time=20 next_tx_click=25
+send CW id:w6wx
+Schedule: wall_ticks=42 schedule_ticks=22 station.start_time=20 next_tx_click=25
+Schedule: wall_ticks=43 schedule_ticks=23 station.start_time=20 next_tx_click=25
+Schedule: wall_ticks=44 schedule_ticks=24 station.start_time=20 next_tx_click=25
+TX
+Schedule: wall_ticks=45 schedule_ticks=25 station.start_time=20 next_tx_click=25
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=46 schedule_ticks=26 station.start_time=20 next_tx_click=26
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=47 schedule_ticks=27 station.start_time=20 next_tx_click=27
+RX
+Set power to 20dBm
+Schedule: wall_ticks=48 schedule_ticks=28 station.start_time=20 next_tx_click=28
+RX
+Schedule: wall_ticks=49 schedule_ticks=29 station.start_time=20 next_tx_click=255
+Set band to 12M
+Set power to 50dBm
+Schedule: wall_ticks=50 schedule_ticks=30 station.start_time=20 next_tx_click=35
+send CW id:w6wx
+Schedule: wall_ticks=52 schedule_ticks=32 station.start_time=20 next_tx_click=35
+Schedule: wall_ticks=53 schedule_ticks=33 station.start_time=20 next_tx_click=35
+Schedule: wall_ticks=54 schedule_ticks=34 station.start_time=20 next_tx_click=35
+TX
+Schedule: wall_ticks=55 schedule_ticks=35 station.start_time=20 next_tx_click=35
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=56 schedule_ticks=36 station.start_time=20 next_tx_click=36
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=57 schedule_ticks=37 station.start_time=20 next_tx_click=37
+RX
+Set power to 20dBm
+TX
+Schedule: wall_ticks=58 schedule_ticks=38 station.start_time=20 next_tx_click=38
+RX
+Schedule: wall_ticks=59 schedule_ticks=39 station.start_time=20 next_tx_click=255
+Set band to 10M
+Set power to 50dBm
+Schedule: wall_ticks=60 schedule_ticks=40 station.start_time=20 next_tx_click=45
+send CW id:w6wx
+Schedule: wall_ticks=62 schedule_ticks=42 station.start_time=20 next_tx_click=45
+Schedule: wall_ticks=63 schedule_ticks=43 station.start_time=20 next_tx_click=45
+Schedule: wall_ticks=64 schedule_ticks=44 station.start_time=20 next_tx_click=45
+TX
+Schedule: wall_ticks=65 schedule_ticks=45 station.start_time=20 next_tx_click=45
+RX
+Set power to 40dBm
+TX
+Schedule: wall_ticks=66 schedule_ticks=46 station.start_time=20 next_tx_click=46
+RX
+Set power to 30dBm
+TX
+Schedule: wall_ticks=67 schedule_ticks=47 station.start_time=20 next_tx_click=47
+RX
+Set power to 20dBm
+Schedule: wall_ticks=68 schedule_ticks=48 station.start_time=20 next_tx_click=48
+RX
+Schedule: wall_ticks=69 schedule_ticks=49 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=70 schedule_ticks=50 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=71 schedule_ticks=51 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=72 schedule_ticks=52 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=73 schedule_ticks=53 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=74 schedule_ticks=54 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=75 schedule_ticks=55 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=76 schedule_ticks=56 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=77 schedule_ticks=57 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=78 schedule_ticks=58 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=79 schedule_ticks=59 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=80 schedule_ticks=60 station.start_time=20 next_tx_click=255
+*** GPS Discipline clock start
+‚šr¢º’‚bº±1.29,192.23,250615,,,D*71
+*** GPS Discipline clock done: 0
+Schedule: wall_ticks=81 schedule_ticks=61 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=82 schedule_ticks=62 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=83 schedule_ticks=63 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=84 schedule_ticks=64 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=85 schedule_ticks=65 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=86 schedule_ticks=66 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=87 schedule_ticks=67 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=88 schedule_ticks=68 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=89 schedule_ticks=69 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=90 schedule_ticks=70 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=91 schedule_ticks=71 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=92 schedule_ticks=72 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=93 schedule_ticks=73 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=94 schedule_ticks=74 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=95 schedule_ticks=75 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=96 schedule_ticks=76 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=97 schedule_ticks=77 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=98 schedule_ticks=78 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=99 schedule_ticks=79 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=100 schedule_ticks=80 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=101 schedule_ticks=81 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=102 schedule_ticks=82 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=103 schedule_ticks=83 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=104 schedule_ticks=84 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=105 schedule_ticks=85 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=106 schedule_ticks=86 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=107 schedule_ticks=87 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=108 schedule_ticks=88 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=109 schedule_ticks=89 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=110 schedule_ticks=90 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=111 schedule_ticks=91 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=112 schedule_ticks=92 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=113 schedule_ticks=93 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=114 schedule_ticks=94 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=115 schedule_ticks=95 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=116 schedule_ticks=96 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=117 schedule_ticks=97 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=118 schedule_ticks=98 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=119 schedule_ticks=99 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=120 schedule_ticks=100 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=121 schedule_ticks=101 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=122 schedule_ticks=102 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=123 schedule_ticks=103 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=124 schedule_ticks=104 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=125 schedule_ticks=105 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=126 schedule_ticks=106 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=127 schedule_ticks=107 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=128 schedule_ticks=108 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=129 schedule_ticks=109 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=130 schedule_ticks=110 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=131 schedule_ticks=111 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=132 schedule_ticks=112 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=133 schedule_ticks=113 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=134 schedule_ticks=114 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=135 schedule_ticks=115 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=136 schedule_ticks=116 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=137 schedule_ticks=117 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=138 schedule_ticks=118 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=139 schedule_ticks=119 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=140 schedule_ticks=120 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=141 schedule_ticks=121 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=142 schedule_ticks=122 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=143 schedule_ticks=123 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=144 schedule_ticks=124 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=145 schedule_ticks=125 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=146 schedule_ticks=126 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=147 schedule_ticks=127 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=148 schedule_ticks=128 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=149 schedule_ticks=129 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=150 schedule_ticks=130 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=151 schedule_ticks=131 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=152 schedule_ticks=132 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=153 schedule_ticks=133 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=154 schedule_ticks=134 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=155 schedule_ticks=135 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=156 schedule_ticks=136 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=157 schedule_ticks=137 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=158 schedule_ticks=138 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=159 schedule_ticks=139 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=160 schedule_ticks=140 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=161 schedule_ticks=141 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=162 schedule_ticks=142 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=163 schedule_ticks=143 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=164 schedule_ticks=144 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=165 schedule_ticks=145 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=166 schedule_ticks=146 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=167 schedule_ticks=147 station.start_time=20 next_tx_click=255
+Schedule: wall_ticks=168 schedule_ticks=148 station.start_time=20 next_tx_click=255
