@@ -110,6 +110,11 @@ void setup()  {
     gps_serial.println(PMTK_API_SET_FIX_CTL_1HZ);   // 1 Hz fix rate
 
     delay(1000);
+    // Stop interrupts from GPS serial input.
+    // All GPS readers have/ to call listen() 
+    // and end with stopListening, or else
+    // interrupts disturb time-critical code sections.
+    gps_serial.stopListening();
   }
 
   FPPRINTRC(1,0,"QRX INIT GPS DO")
