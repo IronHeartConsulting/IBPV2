@@ -88,6 +88,10 @@ void setpower(byte dBm) {
       newPow = 2;
 	  FPPRINTRC(1,12,"30");
       break;
+    case 20:  // 20 dBm = 100 milliwatts
+      newPow = 2;
+	  FPPRINTRC(1,12,"30");
+      break;
     default:
       newPow = 1;
 	  FPPRINTRC(1,12,"20");
