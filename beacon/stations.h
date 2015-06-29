@@ -6,23 +6,23 @@ struct station {
 };
 
 struct station station =
-//  {  "4U1UN", "United Nations", "UNRC", 0 },
-//  {  "VE8AT", "Canada", "RAC/NARC", 10 },
+//  {  "4u1un", "United Nations", "UNRC", 0 },
+//  {  "ve8at", "Canada", "RAC/NARC", 10 },
 //  {  "w6wx", "United States", "NCDXF", 20 },
-//  {  "KH6WO", "Hawaii", "KH6BYU", 30 },
+//  {  "kh6wo", "Hawaii", "KH6BYU", 30 },
 {  "k6td", "Hawaii", "K6TD", 30 }
-//  {  "ZL6B", "New Zealand", "NZART", 40 },
-//  {  "VK6RBP", "Australia", "WIA", 50 },
-//  {  "JA2IGY", "Japan", "JARL", 60 },
-//  {  "RR9O", "Russia", "SRR", 70 },
-//  {  "VR2B", "Hong Kong", "HARTS", 80 },
-//  {  "4S7B", "Sri Lanka", "RSSL", 90 },
-//  {  "ZS6DN", "South Africa", "ZS6DN", 100 },
-//  {  "5Z4B", "Kenya", "ARSK", 110 },
-//  {  "4X6TU", "Israel", "IARC", 120 },
-//  {  "OH2B", "Finland", "SRAL", 130 },
-//  {  "CS3B", "Madeira", "ARRM", 140 },
-//  {  "LU4AA", "Argentina", "RCA", 150 },
-//  {  "OA4B", "Peru", "RCP", 160 },
-//  {  "YV5B", "Venezuela", "RCV", 170 }
+//  {  "zl6b", "New Zealand", "NZART", 40 },
+//  {  "vk6rbp", "Australia", "WIA", 50 },
+//  {  "ja2igy", "Japan", "JARL", 60 },
+//  {  "rr9o", "Russia", "SRR", 70 },
+//  {  "vr2b", "Hong Kong", "HARTS", 80 },
+//  {  "4s7b", "Sri Lanka", "RSSL", 90 },
+//  {  "zs6dn", "South Africa", "ZS6DN", 100 },
+//  {  "5z4b", "Kenya", "ARSK", 110 },
+//  {  "4x6tu", "Israel", "IARC", 120 },
+//  {  "oh2b", "Finland", "SRAL", 130 },
+//  {  "cs3b", "Madeira", "ARRM", 140 },
+//  {  "lu4aa", "Argentina", "RCA", 150 },
+//  {  "oa4b", "Peru", "RCP", 160 },
+//  {  "yv5b", "Venezuela", "RCV", 170 }
   ;

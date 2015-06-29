@@ -44,21 +44,27 @@ boolean gps_discipline_clock(long tries) {
           byte month, day, hour, minute, second, hundredths;
           unsigned long fix_age;
           gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &fix_age);
+		  if (fix_age != gps.GPS_INVALID_AGE) {
           // about to write into wall_ticks but how do we know we're not about to interrupt?
           // maybe we should increment it by one and let interrupt write it itself.  that's assuming
           // the gps decode happens enough before the PPS.
-          wall_ticks = ((minute * 60) + second) % (3*60);
-          Serial.print(F("handle_gps_parsing says update wall_ticks to "));
-          Serial.print(wall_ticks, DEC);
-          Serial.print(F(" fix age "));
-          Serial.print(fix_age);
-          Serial.println(F("ms"));
-          done = true;
-          break;
-        }
-      }
-    }
-  }
+          	wall_ticks = ((minute * 60) + second) % (3*60);
+          	Serial.print(F("handle_gps_parsing says update wall_ticks to "));
+          	Serial.print(wall_ticks, DEC);
+          	Serial.print(F(" fix age "));
+          	Serial.print(fix_age);
+          	Serial.println(F("ms"));
+          	done = true;
+          	break;
+		  }
+		  else { // fix_age !=
+			Serial.print(F("fix age INVALID"));
+			break;
+		  }
+        }  // gps.encode()
+      } // if(true)  - if gps_serial.read() retunred a character
+    } // if gps_serial says there are characters available
+  }   // while retries > 0
 
   gps_serial.stopListening();
 
