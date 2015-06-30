@@ -98,6 +98,7 @@ void handle_tick() {
     break;
 
   case 60:
+	setband(20);   // so we can listen to the start of the next cycle
     // not beaconing, so do GPS clock discipline.
     gps_discipline_clock(32768);
     break;

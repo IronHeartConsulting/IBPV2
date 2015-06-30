@@ -12,6 +12,7 @@
 #include "stations.h"
 #include "beacon.h"
 
+
 // RxD, TxD
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);
 TinyGPS gps;

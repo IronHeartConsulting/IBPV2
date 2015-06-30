@@ -42,7 +42,7 @@ void setband(byte meters) {
 	  FPPRINTRC(1,9,"20");
       break;
     case 17:
-      newFreq = 18100000;
+      newFreq = 18110000;
 	  FPPRINTRC(1,9,"17");
       break;
     case 15:
@@ -99,12 +99,6 @@ void setpower(byte dBm) {
   }
   radio.adjustSliders(rfPower,newPow);
 }
-
-// void send_id(char *id) {
-//  Serial.print(F("Send CW "));
-//  Serial.println(id);
-//  id_sent = true;
-// }
 
 // Caution: this is called in an interrupt routine!
 void txon() {
