@@ -115,4 +115,7 @@ void handle_tick() {
   default:
     break;
   }
+  
+  Serial.print(F("new:next_tx_click:"));
+  Serial.println(next_tx_click,DEC);
 }

@@ -64,6 +64,9 @@ boolean gps_discipline_clock(long tries) {
         }  // gps.encode()
       } // if(true)  - if gps_serial.read() retunred a character
     } // if gps_serial says there are characters available
+	else {
+		delay(100);  // give time for chars to arrive
+	}
   }   // while retries > 0
 
   gps_serial.stopListening();

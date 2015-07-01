@@ -52,6 +52,7 @@ volatile boolean id_sent = false;
 // keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
   wall_ticks = (wall_ticks+1) % (3*60);
+//    Serial.println(wall_ticks,DEC);
   if ((wall_ticks - station.start_time) == next_tx_click) {
     txon();
   }

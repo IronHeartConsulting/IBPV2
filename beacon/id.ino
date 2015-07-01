@@ -23,7 +23,8 @@ void send_id(char *id) {
   cwBeacon.setMessage(id);
   cwBeacon.sendBlocking();
   id_sent = true;
-  digitalWrite(LED, LOW);
+  digitalWrite(CWLINE,LOW);
+//   digitalWrite(LED, LOW);
 }
 
 void longDAH() {

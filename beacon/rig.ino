@@ -75,26 +75,22 @@ void setpower(byte dBm) {
   Serial.print(F("Set power to ") );
   Serial.print(dBm, DEC);
   Serial.println(F("dBm") );
+  FPPRINTRC(1,12,dBm);
   switch (dBm) {
     case 50:  // 50 dBm = 100 watts
       newPow = 249;
-	  FPPRINTRC(1,12,"50");
       break;
     case 40:  // 40 dBm = 10 watts
-	  FPPRINTRC(1,12,"40");
       newPow = 30;
       break;
     case 30:  // 30 dBm = 1 watts
       newPow = 2;
-	  FPPRINTRC(1,12,"30");
       break;
     case 20:  // 20 dBm = 100 milliwatts
       newPow = 1;
-	  FPPRINTRC(1,12,"20");
       break;
     default:
       newPow = 1;
-	  FPPRINTRC(1,12,"20");
       break;
   }
   radio.adjustSliders(rfPower,newPow);
