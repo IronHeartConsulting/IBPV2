@@ -7,7 +7,8 @@ void gps_end_milliclock_discipline() {
   disciplining_milliclock = false;
   if (millis_per_second != 0) {
     seven_fifty_millis = (millis_per_second * 3 / 4);
-    Serial.print(F("Disciplined 750 millis to ")); Serial.println(seven_fifty_millis);
+    debug_print(F("Disciplined 750 millis to ")); 
+    debug_println(seven_fifty_millis);
   }
 }
 
@@ -21,7 +22,7 @@ void gps_end_milliclock_discipline() {
  */
 boolean gps_discipline_clock(long tries) {
   boolean done = false;
-  Serial.println(F("*** GPS Discipline clock start"));
+  debug_println(F("*** GPS Discipline clock start"));
   Serial.flush();
 
   // Enable SoftwareSerial; disable before exit.
@@ -38,7 +39,7 @@ boolean gps_discipline_clock(long tries) {
         }
 
         if (gps.encode(c)) {
-          Serial.println();
+          Serial.newline();
           // what about GPS.milliseconds?  Should we do this only if it is in a certain range?
           int year;
           byte month, day, hour, minute, second, hundredths;
@@ -48,11 +49,11 @@ boolean gps_discipline_clock(long tries) {
           // maybe we should increment it by one and let interrupt write it itself.  that's assuming
           // the gps decode happens enough before the PPS.
           wall_ticks = ((minute * 60) + second) % (3*60);
-          Serial.print(F("handle_gps_parsing says update wall_ticks to "));
-          Serial.print(wall_ticks, DEC);
-          Serial.print(F(" fix age "));
-          Serial.print(fix_age);
-          Serial.println(F("ms"));
+          debug_print(F("handle_gps_parsing says update wall_ticks to "));
+          debug_print_dec(wall_ticks);
+          debug_print(F(" fix age "));
+          debug_print(fix_age);
+          debug_println(F("ms"));
           done = true;
           break;
         }
@@ -62,8 +63,8 @@ boolean gps_discipline_clock(long tries) {
 
   gps_serial.stopListening();
 
-  Serial.print(F("*** GPS Discipline clock done: "));
-  Serial.println(done);
+  debug_print(F("*** GPS Discipline clock done: "));
+  debug_println(done);
   Serial.flush();
 
   return done;
