@@ -9,6 +9,8 @@
 #include <inttypes.h>
 #include <LCDi2cNHD.h>
 
+#include "config.h"
+#include "debug.h"
 #include "stations.h"
 #include "beacon.h"
 
@@ -86,16 +88,12 @@ void setup()  {
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
   // Serial debug output to desktop computer.  For product, send to LCD.
-  {
-    Serial.begin(115200);
+#if DEBUG
+	setup_debug_print();
+#endif
 
-    // Leonardo requires this.
-    while (!Serial) {
-    }
-  }
-
-  Serial.println(F("NCDXC/IARU Beacon IBPV2.3"));
-  Serial.println(station.call);
+  debug_println(F("NCDXC/IARU Beacon IBPV2.3"));
+  debug_println(station.call);
 
   FPPRINTRC(1,0,"QRX INIT      ")
   
@@ -121,20 +119,20 @@ void setup()  {
 
   FPPRINTRC(1,0,"QRX INIT GPS DO")
   do {
-    Serial.println(F("*** GPS Discipline clock"));
+    debug_println(F("*** GPS Discipline clock"));
   } while (! gps_discipline_clock(LONG_MAX));
-  Serial.println(F("*** GPS Locked "));
+  debug_println(F("*** GPS Locked "));
 
-  Serial.println(F("*** GPS Discipline Milliclock"));
+  debug_println(F("*** GPS Discipline Milliclock"));
   {
     gps_begin_milliclock_discipline(); 
     delay(5000);
     gps_end_milliclock_discipline();
   }
-  Serial.println(F("*** Milliclock disciplined "));
+  debug_println(F("*** Milliclock disciplined "));
   
   FPPRINTRC(1,0,"QRX INIT RADIO")
-  Serial.println(F("Radio init"));
+  debug_println(F("Radio init"));
   radioSetup();
   CWSetup();
   

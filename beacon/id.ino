@@ -14,8 +14,8 @@ void CWSetup() {
 }  
 
 void send_id(char *id) {
-  Serial.print(F("send CW id:"));
-  Serial.println(id);
+  debug_print(F("send CW id:"));
+  debug_println(id);
   digitalWrite(CWLINE,LOW);
   digitalWrite(PTTLINE,PTTON);
   digitalWrite(LED, HIGH);

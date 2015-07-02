@@ -32,9 +32,9 @@ void radioSetup() {
 }
 
 void setband(byte meters) {
-  Serial.print(F("Set band to "));
-  Serial.print(meters, DEC);
-  Serial.println(F("M") );
+  debug_print(F("Set band to "));
+  debug_print_dec(meters);
+  debug_println(F("M") );
 //  txoff();   // don't even think of QSYing with the RX on
   switch (meters) {
     case 20:
@@ -72,10 +72,10 @@ void setpower(byte dBm) {
   // 1W = 30dBm
   // 100mW = 20dBm
   uint16_t newPow;
-  Serial.print(F("Set power to ") );
-  Serial.print(dBm, DEC);
-  Serial.println(F("dBm") );
   FPPRINTRC(1,12,dBm);
+  debug_print(F("Set power to ") );
+  debug_print_dec(dBm);
+  debug_println(F("dBm") );
   switch (dBm) {
     case 50:  // 50 dBm = 100 watts
       newPow = 249;
@@ -103,9 +103,9 @@ void txon() {
     digitalWrite(PTTLINE,PTTON);
     FPBLRED
     digitalWrite(CWLINE,HIGH);
-    Serial.println(F("TX"));
+    debug_println(F("TX"));
   } else {
-    Serial.println(F("ID Not sent: TX INHIBIT"));
+    debug_println(F("ID Not sent: TX INHIBIT"));
   }
 }
 
@@ -114,5 +114,5 @@ void txoff() {
     digitalWrite(PTTLINE,PTTOFF);
     FPBLGREEN
     digitalWrite(CWLINE,LOW);
-    Serial.println(F("RX"));
+    debug_println(F("RX"));
 }

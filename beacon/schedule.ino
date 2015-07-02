@@ -4,12 +4,12 @@ void handle_tick() {
   // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
 
-  Serial.print(F("Schedule: wall_ticks=")); Serial.print(wall_ticks, DEC);
-  Serial.print(F(" schedule_ticks=")); Serial.print(schedule_ticks, DEC);
-  Serial.print(F(" station.start_time=")); Serial.print(station.start_time, DEC);
-  Serial.print(F(" next_tx_click=")); Serial.println(next_tx_click, DEC);
   FPPRINTRC(1,5,"   ");
   FPPRINTRC(1,5,wall_ticks);
+  debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
+  debug_print(F(" schedule_ticks=")); debug_print_dec(schedule_ticks);
+  debug_print(F(" station.start_time=")); debug_print_dec(station.start_time);
+  debug_print(F(" next_tx_click=")); debug_println_dec(next_tx_click);
 
   switch(schedule_ticks) {
   case -20:
