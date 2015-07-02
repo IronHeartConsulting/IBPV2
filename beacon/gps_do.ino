@@ -54,7 +54,7 @@ boolean gps_discipline_clock(long tries) {
           	debug_print(wall_ticks);
           	debug_print(F(" fix age "));
           	debug_print(fix_age);
-          	debug_print(F("ms"));
+          	debug_println(F("ms"));
           	done = true;
           	break;
 		  }

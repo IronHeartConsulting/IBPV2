@@ -115,6 +115,6 @@ void handle_tick() {
     break;
   }
   
-  Serial.print(F("new:next_tx_click:"));
-  Serial.println(next_tx_click,DEC);
+  debug_print(F("sked exit - next_tx_click:"));
+  debug_println_dec(next_tx_click);
 }
