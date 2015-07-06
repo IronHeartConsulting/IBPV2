@@ -54,10 +54,9 @@ volatile boolean id_sent = false;
 // keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
   wall_ticks = (wall_ticks+1) % (3*60);
-//    Serial.println(wall_ticks,DEC);
-  if ((wall_ticks - station.start_time) == next_tx_click) {
-    txon();
-  }
+//  if ((wall_ticks - station.start_time) == next_tx_click) {
+//    txon();
+//  }
 
   if (disciplining_milliclock) {
     int t = last_millis;
@@ -83,7 +82,7 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.3      ");
+        FPPRINTRC(0,0,"V2.4      ");
         FPPRINTRC(0,7,station.call);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
@@ -92,7 +91,7 @@ void setup()  {
 	setup_debug_print();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.3"));
+  debug_println(F("NCDXC/IARU Beacon IBPV2.4"));
   debug_println(station.call);
 
   FPPRINTRC(1,0,"QRX INIT      ")

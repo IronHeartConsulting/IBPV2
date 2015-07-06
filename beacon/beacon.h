@@ -37,4 +37,7 @@
 
 // uses the built in I2C hardware and the Wire interface.
 
+//   RIG control macros
+#define KEYDOWN digitalWrite(CWLINE,HIGH);
+#define KEYUP   digitalWrite(CWLINE,LOW);
 #endif

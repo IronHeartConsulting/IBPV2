@@ -24,76 +24,29 @@ void handle_tick() {
     setpower(50);
     break;
 
-  case 0: case 10: case 20: case 30: case 40:
-    // start sending ASAP.
-    // send_id will not return until finished sending ID, somewhere between tick 2 and tick 4.
-    // next tick we'll definitely see is tick 5.
-    send_id(station.call);
+  case 0:
+// 20m sequence
+	runBand(20);
     break;
 
-  case 1: case 2: case 3: case 4:
-    // Won't get here unless the ID is short, but if we do, make sure we don't start some other activity in our default case
-    // by preventing it here.
+  case 10:
+// 17 sequence
+	runBand(17);
     break;
 
-  case 5: case 15: case 25: case 35: case 45:
-    // definitely will be done with ID by now.
-    // First DAH TX 100W was started by tick; keep it on for 750ms and prepare for next DAH and its power level.
-    delay(750);
-    txoff();
-    next_tx_click++;
-    setpower(40);
+  case 20:
+// 15 sequence
+	runBand(15);
     break;
 
-  case 6: case 16: case 26: case 36: case 46:
-    // Second DAH TX 10W is already ongoing; keep it on for 750ms and prepare for next DAH and its power level.
-    delay(750);
-    txoff();
-    next_tx_click++;
-    setpower(30);
+  case 30:
+// 12 sequence
+	runBand(12);
     break;
 
-  case 7: case 17: case 27: case 37: case 47:
-    // Third DAH TX 1W is already ongoing; keep it on for 750ms and prepare for next DAH and its power level.
-    delay(750);
-    txoff();
-    next_tx_click++;
-    setpower(20);
-    break;
-
-  case 8: case 18: case 28: case 38: case 48:
-    // Fourth DAH TX 0.11W is already ongoing; keep it on for 750ms and prepare for band change.
-    delay(750);
-    txoff();
-    next_tx_click = 255;
-    break;
-
-  case 9:
-    // Fourth DAH is done.  9th second is silent.  ID on 10th second and start transmitting DAHs on 15th.
-    next_tx_click = 15;
-    setband(17);
-    setpower(50);
-    break;
-
-  case 19:
-    // Fourth DAH is done.  19th second is silent.  ID on 20th second and start transmitting DAHs on 25th.
-    next_tx_click = 25;
-    setband(15);
-    setpower(50);
-    break;
-
-  case 29:
-    // Fourth DAH is done.  29th second is silent.  ID on 30th second and start transmitting DAHs on 35th.
-    next_tx_click = 35;
-    setband(12);
-    setpower(50);
-    break;
-
-  case 39:
-    // Fourth DAH is done.  39th second is silent.  ID on 40th second and start transmitting DAHs on 45th.
-    next_tx_click = 45;
-    setband(10);
-    setpower(50);
+  case 40:
+// 10 sequence
+	runBand(10);
     break;
 
   case 60:
@@ -115,6 +68,34 @@ void handle_tick() {
     break;
   }
   
-  debug_print(F("sked exit - next_tx_click:"));
-  debug_println_dec(next_tx_click);
+  debug_println(F("sked exit"));
+}
+
+void runBand(byte band) {
+
+	setband(band);
+    send_id(station.call);
+	delay(250);
+	// 1st long dash 100 watts
+	KEYDOWN 
+	delay(995);
+	KEYUP
+	// 2nd long dash 10 watts
+	setpower(40);
+	KEYDOWN 
+	delay(995);
+	KEYUP
+	// 3rd long dash 1 watt
+	setpower(30);
+	KEYDOWN 
+	delay(995);
+	KEYUP
+	// 4th long dash 100 milliwatts
+	setpower(20);
+	KEYDOWN 
+	delay(995);
+	KEYUP
+	txoff();
+
+	return;
 }
