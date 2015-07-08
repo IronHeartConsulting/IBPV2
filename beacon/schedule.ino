@@ -74,6 +74,7 @@ void handle_tick() {
 void runBand(byte band) {
 
 	setband(band);
+	setpower(50);
     send_id(station.call);
 	delay(250);
 	// 1st long dash 100 watts
