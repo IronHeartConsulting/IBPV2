@@ -28,6 +28,7 @@ LCDi2cNHD fp_lcd = LCDi2cNHD(2,16,0x50>>1,0);
 #define PMTK_API_SET_FIX_CTL_1HZ  F("$PMTK300,1000,0,0,0,0*1C")
 
 volatile boolean ticked = false;
+int tryCount = 20;  // seocnd trying to find serial port connect
 
 // wall_ticks counts seconds and goes from 0-180 because there is a 3-minute beacon schedule.
 volatile byte wall_ticks = 0;
@@ -82,7 +83,7 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.4      ");
+        FPPRINTRC(0,0,"V2.5      ");
         FPPRINTRC(0,7,station.call);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
@@ -91,7 +92,7 @@ void setup()  {
 	setup_debug_print();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.4"));
+  debug_println(F("NCDXC/IARU Beacon IBPV2.5"));
   debug_println(station.call);
 
   FPPRINTRC(1,0,"QRX INIT      ")
