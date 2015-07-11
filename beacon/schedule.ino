@@ -75,6 +75,10 @@ void runBand(byte band) {
 
 	setband(band);
 	setpower(50);
+ // This delay is tuned to match the V1 controllers, as meausred by FAROS
+ // Don't change without re-calibrating.
+ //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
+  delay(352);
     send_id(station.call);
 	delay(250);
 	// 1st long dash 100 watts

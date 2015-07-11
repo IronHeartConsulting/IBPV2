@@ -49,7 +49,10 @@ boolean gps_discipline_clock(long tries) {
           // about to write into wall_ticks but how do we know we're not about to interrupt?
           // maybe we should increment it by one and let interrupt write it itself.  that's assuming
           // the gps decode happens enough before the PPS.
-          	wall_ticks = ((minute * 60) + second) % (3*60);
+          //
+          //   Move to "the other side of the the 1PPS tick"
+          //  The message appears to arrive AFTER the 1 second tick
+          	wall_ticks = 1 + ((minute * 60) + second) % (3*60);
           	debug_print(F("handle_gps_parsing says update wall_ticks to "));
           	debug_print(wall_ticks);
           	debug_print(F(" fix age "));
