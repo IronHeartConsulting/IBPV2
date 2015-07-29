@@ -12,14 +12,3 @@ test:
 beacon:		beacon.ino
 	$(ARDUINO)/Arduino $(PREF_BUILD_PATH) $(BUILD_FLAGS) $(IBPV2)/beacon.ino
 
-
-upload:	reset raw_upload
-
-reset:	
-	./leo_reset.py
-	stty -F /dev/ttyACM0 57600
-
-
-raw_upload:
-	avrdude -F -v -pm168 -cstk500v1 -P/dev/ttyACM0 -b19200 -D -Uflash:w:"beacon.cpp.hex":i
-
