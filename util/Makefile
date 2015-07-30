@@ -36,10 +36,10 @@ reset:
 
 
 raw_upload_blink:
-	avrdude -F -v -p atmega32u4 -c avr109 -P/dev/ttyACM0 -b57600 -D -U flash:w:"../release/blink.hex":i
+	avrdude -F -q -p atmega32u4 -c avr109 -P/dev/ttyACM0 -b57600 -D -U flash:w:"../release/blink.hex":i
 
 raw_upload_beacon:
-	avrdude -F -v -p atmega32u4 -c avr109 -P/dev/ttyACM0 -b57600 -D -U flash:w:"../release/beacon.hex":i
+	avrdude -F -q -p atmega32u4 -c avr109 -P/dev/ttyACM0 -b57600 -D -U flash:w:"../release/beacon.hex":i
 
 leo_reset:	leo_reset.c
 	gcc -o leo_reset leo_reset.c
