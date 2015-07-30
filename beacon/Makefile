@@ -11,4 +11,5 @@ test:
 
 beacon:		beacon.ino
 	$(ARDUINO)/Arduino $(PREF_BUILD_PATH) $(BUILD_FLAGS) $(IBPV2)/beacon.ino
+	cp $(IBPV2)/build/beacon.cpp.hex ../release/beacon.hex
 

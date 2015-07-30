@@ -21,9 +21,13 @@ test:
 # Blink:		./Blink/Blink.ino
 BlinkX:		
 	$(ARDUINO)/Arduino $(PREF_BUILD_PATH) $(BUILD_FLAGS) $(IBPV2)/Blink/Blink.ino
+	cp build/blink.cpp.hex ../release/blink.hex
 
 
-upload:	reset raw_upload
+#  by default, does beacon
+upload:	reset raw_upload_beacon
+
+upload_blink:	reset raw_upload_blink
 
 reset:	
 	./leo_reset $(PORT)
@@ -31,8 +35,11 @@ reset:
 	stty -F $(PORT) 57600
 
 
-raw_upload:
-	avrdude -F -v -p atmega32u4 -c avr109 -P/dev/ttyACM0 -b57600 -D -U flash:w:"build/Blink.cpp.hex":i
+raw_upload_blink:
+	avrdude -F -v -p atmega32u4 -c avr109 -P/dev/ttyACM0 -b57600 -D -U flash:w:"../release/blink.hex":i
+
+raw_upload_beacon:
+	avrdude -F -v -p atmega32u4 -c avr109 -P/dev/ttyACM0 -b57600 -D -U flash:w:"../release/beacon.hex":i
 
 leo_reset:	leo_reset.c
 	gcc -o leo_reset leo_reset.c
