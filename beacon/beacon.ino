@@ -82,7 +82,7 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.4      ");
+        FPPRINTRC(0,0,"V2.5      ");
         FPPRINTRC(0,7,station.call);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 

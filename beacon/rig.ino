@@ -20,7 +20,10 @@ void radioSetup() {
   Serial1.begin(radio_baudrate);
   
 // init the radio
-// ***  _dbg.RS232DebugON();
+#if DEBUG
+	_dbg.RS232DebugON();
+#endif
+
   radio.set_mode(CW);
   radio.adjustSliders(keyerType,0);  // straight key
   radio.get_ReceiveTransmitfunction(powRF);
