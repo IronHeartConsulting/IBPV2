@@ -20,6 +20,7 @@ void handle_tick() {
   case -1:
     next_tx_click = 5;
     FPPRINTRC(1,8,"        ");
+    setRadioMode(beaconMode);
     setband(20);
     setpower(50);
     break;
@@ -51,6 +52,8 @@ void handle_tick() {
 
   case 60:
 	setband(20);   // so we can listen to the start of the next cycle
+	// QSY to 14.070 USB so we can monitor PSK31
+	setRadioMode(PSK31Mode);
     // not beaconing, so do GPS clock discipline.
     gps_discipline_clock(32768);
     break;

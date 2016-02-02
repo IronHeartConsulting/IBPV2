@@ -40,4 +40,9 @@
 //   RIG control macros
 #define KEYDOWN digitalWrite(CWLINE,HIGH);
 #define KEYUP   digitalWrite(CWLINE,LOW);
+
+enum rMode {beaconMode = 0, PSK31Mode = 1};
+
 #endif
+
+

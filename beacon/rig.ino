@@ -69,6 +69,10 @@ void setband(byte meters) {
   id_sent = false;
 }
 
+void setRadioMode(rMode Mode) {
+  
+}
+
 void setpower(byte dBm) {
   // 100W = 50dBm
   // 10W = 40dBm
