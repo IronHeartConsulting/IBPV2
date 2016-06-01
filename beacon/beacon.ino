@@ -54,7 +54,7 @@ volatile boolean id_sent = false;
 // keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
   wall_ticks = (wall_ticks+1) % (3*60);
-//  if ((wall_ticks - station.start_time) == next_tx_click) {
+//  if ((wall_ticks - stations[SLOTINDEX].start_time) == next_tx_click) {
 //    txon();
 //  }
 
@@ -82,8 +82,9 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.5      ");
-        FPPRINTRC(0,7,station.call);
+        FPPRINTRC(0,0,"V2.6d     ");
+        FPPRINTRC(0,7,stations[SLOTINDEX].call);
+		FPPRINTRC(0,12,stations[SLOTINDEX].start_time);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
   // Serial debug output to desktop computer.  For product, send to LCD.
@@ -92,7 +93,7 @@ void setup()  {
 #endif
 
   debug_println(F("NCDXC/IARU Beacon IBPV2.4"));
-  debug_println(station.call);
+  debug_println(stations[SLOTINDEX].call);
 
   FPPRINTRC(1,0,"QRX INIT      ")
   

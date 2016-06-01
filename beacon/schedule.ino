@@ -1,10 +1,10 @@
 void handle_tick() {
-  int schedule_ticks = wall_ticks - station.start_time;
+  int schedule_ticks = wall_ticks - stations[SLOTINDEX].start_time;
 
   // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
 
-  FPPRINTRC(1,5,"   ");
+  FPPRINTRC(1,5,"           ");
   FPPRINTRC(1,5,wall_ticks);
   debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
   debug_print(F(" schedule_ticks=")); debug_print_dec(schedule_ticks);
@@ -76,13 +76,14 @@ void handle_tick() {
 
 void runBand(byte band) {
 
+      FPPRINTRC(1,0,"TX           ");
 	setband(band);
 	setpower(50);
  // This delay is tuned to match the V1 controllers, as meausred by FAROS
  // Don't change without re-calibrating.
  //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
   delay(352);
-    send_id(station.call);
+    send_id(stations[SLOTINDEX].call);
 	delay(250);
 	// 1st long dash 100 watts
 	KEYDOWN 

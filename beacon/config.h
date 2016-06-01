@@ -3,5 +3,7 @@
 
 #define DEBUG 0
 
+#define SLOTINDEX 2
+
 #endif
 
