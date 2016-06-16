@@ -95,10 +95,10 @@ void setpower(byte dBm) {
       newPow = 2;
       break;
     case 20:  // 20 dBm = 100 milliwatts
-      newPow = 1;
+      newPow = 0;
       break;
     default:
-      newPow = 1;
+      newPow = 0;
       break;
   }
   radio.adjustSliders(rfPower,newPow);
