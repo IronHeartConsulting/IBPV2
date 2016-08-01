@@ -18,7 +18,7 @@ void send_id(char *id) {
   debug_println(id);
   digitalWrite(CWLINE,LOW);
   digitalWrite(PTTLINE,PTTON);
-  digitalWrite(LED, HIGH);
+//   digitalWrite(LED, HIGH);
   FPBLRED
   cwBeacon.setMessage(id);
   cwBeacon.sendBlocking();

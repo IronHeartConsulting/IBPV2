@@ -17,6 +17,7 @@ void radioSetup() {
   digitalWrite(PTTLINE, PTTOFF);
   pinMode(CWLINE, OUTPUT);
   pinMode(PTTLINE, OUTPUT);
+  setALCPwr(LOW);
   Serial1.begin(radio_baudrate);
   
 // init the radio
@@ -95,6 +96,8 @@ void setpower(byte dBm) {
       newPow = 2;
       break;
     case 20:  // 20 dBm = 100 milliwatts
+//	turn on the ALC voltage.  We do it here to give it time to stablizie before key down
+		digitalWrite(ALC_PWR, HIGH);
       newPow = 0;
       break;
     default:
@@ -104,22 +107,39 @@ void setpower(byte dBm) {
   radio.adjustSliders(rfPower,newPow);
 }
 
+void setRawPwr(byte newPow) {
+    radio.adjustSliders(rfPower,newPow);
+}
+
+//  set the power level using the 0x14 comand set
+void setRawPwrM2(byte newPow) {
+	radio.set_ReceiveTransmitfunction(powRF,newPow);   
+}
+
+void setALCPwr(byte newState) {
+		digitalWrite(ALC_PWR, newState);
+	
+}
+
 // Caution: this is called in an interrupt routine!
 void txon() {
     if (id_sent) {
-    digitalWrite(LED, HIGH);
-    digitalWrite(PTTLINE,PTTON);
-    FPBLRED
-    digitalWrite(CWLINE,HIGH);
-    debug_println(F("TX"));
+//  USER LED PIN now turns on the ALC OUTPUT power.  Well, it also still lights the user LED
+// **	    digitalWrite(LED, HIGH);
+   	 digitalWrite(PTTLINE,PTTON);
+   	 FPBLRED
+   	 digitalWrite(CWLINE,HIGH);
+   	 debug_println(F("TX"));
   } else {
     debug_println(F("ID Not sent: TX INHIBIT"));
   }
 }
 
 void txoff() {
-    digitalWrite(LED, LOW);
+	digitalWrite(ALC_PWR, LOW);
+// ***    digitalWrite(LED, LOW);
     digitalWrite(PTTLINE,PTTOFF);
+	setALCPwr(LOW);
     FPBLGREEN
     FPPRINTRC(1,0,"OPER");
     digitalWrite(CWLINE,LOW);

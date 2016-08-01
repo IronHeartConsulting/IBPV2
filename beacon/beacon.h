@@ -18,8 +18,15 @@
 #define DLEAYTIMER 60	// number of seconds to wait for USB serial monitor to connect
 #define PPS 7			// pin connected to GPS PPS interrupt input
 #define LED 13			// LED on PCA
-#define GPSRxD 11                // GPS software serial RxD pin
-#define GPSTxD 8               // GPS software serial TxD pin - NOTE - non-standard usage, and incompat with Adafruit shield wiring
+#define ALC_PWR 13		// shutdown signal into ALC Power invertor - shared with USER LED
+
+// orginal
+//#define GPSRxD 11                // GPS software serial RxD pin
+//#define GPSTxD 8               // GPS software serial TxD pin - NOTE - non-standard usage, and incompat with Adafruit shield wiring
+
+// SWAPPed
+#define GPSRxD 8                // GPS software serial RxD pin
+#define GPSTxD 11  
 
 // radio (CI-V) defines
 #define radio_baudrate 4800

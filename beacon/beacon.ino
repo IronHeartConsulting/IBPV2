@@ -71,6 +71,7 @@ void setup()  {
 
 	// Kill radio TX as soon as we wake up
 	pinMode(LED, OUTPUT);	// TX on LED
+	setALCPwr(LOW);
 	pinMode(PTTLINE, OUTPUT);
 	txoff();
 
@@ -82,7 +83,7 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.6e     ");
+        FPPRINTRC(0,0,"V2.6g     ");
         FPPRINTRC(0,7,stations[SLOTINDEX].call);
 		FPPRINTRC(0,12,stations[SLOTINDEX].start_time);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
@@ -92,7 +93,7 @@ void setup()  {
 	setup_debug_print();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.4"));
+  debug_println(F("NCDXC/IARU Beacon IBPV2.6g"));
   debug_println(stations[SLOTINDEX].call);
 
   FPPRINTRC(1,0,"QRX INIT      ")

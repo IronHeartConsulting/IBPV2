@@ -8,7 +8,7 @@ void handle_tick() {
   FPPRINTRC(1,5,wall_ticks);
   debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
   debug_print(F(" schedule_ticks=")); debug_print_dec(schedule_ticks);
-  debug_print(F(" station.start_time=")); debug_print_dec(station.start_time);
+  // debug_print(F(" station.start_time=")); debug_print_dec(station.start_time);
   debug_print(F(" next_tx_click=")); debug_println_dec(next_tx_click);
 
   switch(schedule_ticks) {
@@ -79,6 +79,7 @@ void runBand(byte band) {
       FPPRINTRC(1,0,"TX           ");
 	setband(band);
 	setpower(50);
+	setALCPwr(LOW);  // make sure ALC ctl voltage is shutdown or off
  // This delay is tuned to match the V1 controllers, as meausred by FAROS
  // Don't change without re-calibrating.
  //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
@@ -101,6 +102,7 @@ void runBand(byte band) {
 	KEYUP
 	// 4th long dash 100 milliwatts
 	setpower(20);
+	setALCPwr(HIGH);
 	KEYDOWN 
 	delay(995);
 	KEYUP
