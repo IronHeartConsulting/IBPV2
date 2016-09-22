@@ -83,7 +83,7 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V1.0a     ");
+        FPPRINTRC(0,0,"V1.0b     ");
         FPPRINTRC(0,7,"Radio Test");
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
@@ -92,7 +92,7 @@ void setup()  {
 	setup_debug_print();
 #endif
 
-  debug_println(F("Radio Test V1.0a"));
+  debug_println(F("Radio Test V1.0b"));
 
   FPPRINTRC(1,0,"QRX INIT      ")
   
@@ -197,8 +197,11 @@ void alcCtl() {
       Serial.print(arg);
 		if (strncmp(arg,"ON",2) == 0 )
 			setALCPwr(HIGH);
-		else
+		else if (strncmp(arg,"OFF",2) == 0)
 			setALCPwr(LOW);
+                else
+                  Serial.print("unknown ALC setting");
+      Serial.println(" ");
     }
     else {
       Serial.println("No ALC setting specified");
