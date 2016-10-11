@@ -61,9 +61,6 @@ enum rMode {beaconMode = 0, PSK31Mode = 1};
 #define EEProm_HWver			6
 #define EEProm_last 			7
 
-// funciton prototypes 
-void dump_eeprom();
-
 #endif
 
 

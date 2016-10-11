@@ -1,9 +1,14 @@
 void handle_tick() {
-  int schedule_ticks = wall_ticks - stations[SLOTINDEX].start_time;
+  int schedule_ticks = wall_ticks - stations[slotindex].start_time;
 
   // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
 
+	if (slotindex == 255) {  // don't know our TX slot, just exit
+  		FPPRINTRC(1,5,"Time slot not set");
+		return;
+	}
+		
   FPPRINTRC(1,5,"           ");
   FPPRINTRC(1,5,wall_ticks);
   debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
@@ -84,7 +89,7 @@ void runBand(byte band) {
  // Don't change without re-calibrating.
  //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
   delay(352);
-    send_id(stations[SLOTINDEX].call);
+    send_id(stations[slotindex].call);
 	delay(250);
 	// 1st long dash 100 watts
 	KEYDOWN 

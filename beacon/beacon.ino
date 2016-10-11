@@ -15,6 +15,12 @@
 #include "beacon.h"
 
 
+//  Global vars
+
+// slotindex - 0-17 index into stations array for callsign, club name, and time slot in seconds
+//   255 indicates don't transmit
+byte slotindex = 255;
+
 // RxD, TxD
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);
 TinyGPS gps;
@@ -54,7 +60,7 @@ volatile boolean id_sent = false;
 // keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
   wall_ticks = (wall_ticks+1) % (3*60);
-//  if ((wall_ticks - stations[SLOTINDEX].start_time) == next_tx_click) {
+//  if ((wall_ticks - stations[slotindex].start_time) == next_tx_click) {
 //    txon();
 //  }
 
@@ -69,6 +75,7 @@ void tick() {
 
 void setup()  {
 
+	slotindex = eeprom_slotid();
 	// Kill radio TX as soon as we wake up
 	pinMode(LED, OUTPUT);	// TX on LED
 	setALCPwr(LOW);
@@ -83,18 +90,22 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.6h     ");
-        FPPRINTRC(0,7,stations[SLOTINDEX].call);
-		FPPRINTRC(0,12,stations[SLOTINDEX].start_time);
+        FPPRINTRC(0,0,"V2.7a     ");
+        FPPRINTRC(0,7,stations[slotindex].call);
+		FPPRINTRC(0,12,stations[slotindex].start_time);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
   // Serial debug output to desktop computer.  For product, send to LCD.
 #if DEBUG
 	setup_debug_print();
+
+// dump EEPORM to serial console
+	dump_eeprom();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.6g"));
-  debug_println(stations[SLOTINDEX].call);
+  debug_println(F("NCDXC/IARU Beacon IBPV2.7a"));
+  debug_println(slotindex);
+  debug_println(stations[slotindex].call);
 
   FPPRINTRC(1,0,"QRX INIT      ")
   

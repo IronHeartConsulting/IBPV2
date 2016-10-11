@@ -18,8 +18,7 @@ struct station {
   {  "5z4b", "Kenya", "ARSK", 110 },
   {  "4x6tu", "Israel", "IARC", 120 },
   {  "oh2b", "Finland", "SRAL", 130 },
-//  {  "cs3b", "Madeira", "ARRM", 140 },
-  {  "k6td", "Hawaii", "K6TD", 140 },
+  {  "cs3b", "Madeira", "ARRM", 140 },
   {  "lu4aa", "Argentina", "RCA", 150 },
   {  "oa4b", "Peru", "RCP", 160 },
   {  "yv5b", "Venezuela", "RCV", 170 }
