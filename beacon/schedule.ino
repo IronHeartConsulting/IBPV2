@@ -88,7 +88,10 @@ void runBand(byte band) {
  // This delay is tuned to match the V1 controllers, as meausred by FAROS
  // Don't change without re-calibrating.
  //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
-  delay(352);
+ //*** delay(352);
+//
+//   New vlaue hand tuned at N6XG's place.  Probably due to adding code prior to the start of the loop
+ delay(134); 
     send_id(stations[slotindex].call);
 	delay(250);
 	// 1st long dash 100 watts

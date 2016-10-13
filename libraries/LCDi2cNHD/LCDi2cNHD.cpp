@@ -61,7 +61,7 @@ LCDi2cNHD::LCDi2cNHD (uint8_t num_lines,uint8_t num_col,int i2c_address,uint8_t 
 void LCDi2cNHD::init () {
 	
 	Wire.begin();
-//***	TWBR = 152;   // set I2C to 50kHz, down from 100 Khz - NHD new firmware is too slow
+	TWBR = 152;   // set I2C to 50kHz, down from 100 Khz - NHD new firmware is too slow
 	on();
 	clear();
 	blink_off();
