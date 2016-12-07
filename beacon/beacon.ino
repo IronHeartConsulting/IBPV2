@@ -8,6 +8,7 @@
 #include <Wire.h>
 #include <inttypes.h>
 #include <LCDi2cNHD.h>
+#include <Bounce2.h>
 
 #include "config.h"
 #include "debug.h"
@@ -26,6 +27,8 @@ SoftwareSerial gps_serial(GPSRxD, GPSTxD);
 TinyGPS gps;
 // rows, columns, I2C address, display (not use, set to zero)
 LCDi2cNHD fp_lcd = LCDi2cNHD(2,16,0x50>>1,0);
+// Bounce (2) object
+Bounce menuBtn = Bounce();
 
 #define GPSECHO false
 // turn on only the second sentence (GPRMC)
@@ -90,10 +93,10 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.7c     ");
+        FPPRINTRC(0,0,F("V2.7c     "));
         FPPRINTRC(0,7,stations[slotindex].call);
 		FPPRINTRC(0,12,stations[slotindex].start_time);
-        FPPRINTRC(1,0,"QRX Serial CNSOL");
+        FPPRINTRC(1,0,F("QRX Serial CNSOL"));
 
   // Serial debug output to desktop computer.  For product, send to LCD.
 #if DEBUG
@@ -103,11 +106,11 @@ void setup()  {
 	dump_eeprom();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.7c"));
+  debug_println(F("NCDXC/IARU Beacon IBPV2.8a"));
   debug_println(slotindex);
   debug_println(stations[slotindex].call);
 
-  FPPRINTRC(1,0,"QRX INIT      ")
+  FPPRINTRC(1,0,F("QRX INIT      "))
   
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
   pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
@@ -129,7 +132,7 @@ void setup()  {
     gps_serial.stopListening();
   }
 
-  FPPRINTRC(1,0,"QRX INIT GPS DO")
+  FPPRINTRC(1,0,F("QRX INIT GPS DO "))
   do {
     debug_println(F("*** GPS Discipline clock"));
   } while (! gps_discipline_clock(LONG_MAX));
@@ -143,13 +146,16 @@ void setup()  {
   }
   debug_println(F("*** Milliclock disciplined "));
   
-  FPPRINTRC(1,0,"QRX INIT RADIO")
+  FPPRINTRC(1,0,F("QRX INIT RADIO"))
   debug_println(F("Radio init"));
   radioSetup();
   CWSetup();
+	pinMode(MENUBTN,INPUT_PULLUP);
+	menuBtn.attach(MENUBTN);	// menu button on front panel
+	menuBtn.interval(10);   	// debounce time
   
-  FPPRINTRC(1,0,"               ");
-  FPPRINTRC(1,0,"OPER");
+  FPPRINTRC(1,0,F("               "));
+  FPPRINTRC(1,0,F("OPER"));
   FPBLGREEN
 
 }
@@ -157,6 +163,11 @@ void setup()  {
 void loop()
 {
   boolean tocked = false;
+
+// debounce the front panel menu button
+//    TODO - is the time spent inside update variable, and how will that affect TX loop start offset?
+	menuBtn.update();
+
   if (ticked) {
     ticked = false;
     tocked = true;

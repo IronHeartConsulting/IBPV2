@@ -43,27 +43,27 @@ void setband(byte meters) {
   switch (meters) {
     case 20:
       newFreq = 14100000;
-	  FPPRINTRC(1,7,"20m");
+	  FPPRINTRC(1,7,F("20m"));
       break;
     case 17:
       newFreq = 18110000;
-	  FPPRINTRC(1,7,"17m");
+	  FPPRINTRC(1,7,F("17m"));
       break;
     case 15:
       newFreq = 21150000;
-	  FPPRINTRC(1,7,"15m");
+	  FPPRINTRC(1,7,F("15m"));
       break;
     case 12:
       newFreq = 24930000;
-	  FPPRINTRC(1,7,"12m");
+	  FPPRINTRC(1,7,F("12m"));
       break;
     case 10:
       newFreq = 28200000;
-	  FPPRINTRC(1,7,"10m");
+	  FPPRINTRC(1,7,F("10m"));
       break;
     default:
       newFreq = 28200000;
-	  FPPRINTRC(1,7,"ERR");
+	  FPPRINTRC(1,7,F("ERR"));
       break;
   }
   radio.set_freq(newFreq);  
@@ -81,7 +81,7 @@ void setpower(byte dBm) {
   // 100mW = 20dBm
   uint16_t newPow;
   FPPRINTRC(1,11,dBm);
-  FPPRINTRC(1,13,"dBm");
+  FPPRINTRC(1,13,F("dBm"));
   debug_print(F("Set power to ") );
   debug_print_dec(dBm);
   debug_println(F("dBm") );
@@ -141,7 +141,7 @@ void txoff() {
     digitalWrite(PTTLINE,PTTOFF);
 	setALCPwr(LOW);
     FPBLGREEN
-    FPPRINTRC(1,0,"OPER");
+    FPPRINTRC(1,0,F("OPER"));
     digitalWrite(CWLINE,LOW);
     debug_println(F("RX"));
 }
