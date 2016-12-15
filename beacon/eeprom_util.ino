@@ -9,7 +9,7 @@ byte eeprom_slotid() {
 
 	byte slotid = 255;
 	slotid = EEPROM.read(EEProm_slotID);
-	if ( (slotid > 0) && (slotid < 18) ) {
+	if ( (slotid >= 0) && (slotid < 18) ) {
 		return slotid;
 	}
 	// else...

@@ -1,9 +1,14 @@
+//   schedule.ino
+//
+//     called by looo() on a clock tick
+//     calls the correct radio fucntions at the right time
+//
+#include "beacon.h"
+#include "softreset.h"
 void handle_tick() {
   int schedule_ticks = wall_ticks - stations[slotindex].start_time;
 
-  // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
-
 	if (slotindex == 255) {  // don't know our TX slot, just exit
   		FPPRINTRC(1,5,F("Time slot not set"));
 		return;
@@ -65,6 +70,15 @@ void handle_tick() {
     // not beaconing, so do GPS clock discipline.
     gps_discipline_clock(32768);
     break;
+
+  case 70:
+	uptime++;
+	debug_print(F("uptime:"));  debug_print_dec(uptime);
+	if (uptime > MAX_UPTIME) { //  just reboot
+		soft_restart();
+	}
+
+	break;
 
   case 168:
     // not beaconing, so do millis clock discipline for 10s

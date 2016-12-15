@@ -1,7 +1,8 @@
-// Adafruit Ultimate GPS module using MTK33x9 chipset
-// http://www.adafruit.com/products/746
-// Arduino Leonardo
-
+//
+//   BEACON main
+//
+//   NCDXF/IARU International Beacon Program - V2
+//
 #include <limits.h>
 #include <TinyGPS.h>
 #include <SoftwareSerial.h>
@@ -14,6 +15,7 @@
 #include "debug.h"
 #include "stations.h"
 #include "beacon.h"
+#include "softreset.h"
 
 
 //  Global vars
@@ -21,17 +23,20 @@
 // slotindex - 0-17 index into stations array for callsign, club name, and time slot in seconds
 //   255 indicates don't transmit
 byte slotindex = 255;
+uint32_t uptime = 0;   // count of times we've been thru the beacon 3 minute loop;
 
-// RxD, TxD
+// RxD, TxD UART is done in the software - to the GPS Radio. 
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);
+//  the GPS NMEA sentence processing class
 TinyGPS gps;
+// front panel LCD display class
 // rows, columns, I2C address, display (not use, set to zero)
 LCDi2cNHD fp_lcd = LCDi2cNHD(2,16,0x50>>1,0);
-// Bounce (2) object
+// front panel MENU button - Bounce (2) object
 Bounce menuBtn = Bounce();
 
 #define GPSECHO false
-// turn on only the second sentence (GPRMC)
+// turn on only the 'seconds' sentence (GPRMC)
 #define PMTK_SET_NMEA_OUTPUT_RMCONLY F("$PMTK314,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0*29")
 #define PMTK_SET_NMEA_UPDATE_1HZ  F("$PMTK220,1000*1F")
 #define PMTK_API_SET_FIX_CTL_1HZ  F("$PMTK300,1000,0,0,0,0*1C")
@@ -76,8 +81,10 @@ void tick() {
   ticked = true;
 }
 
+// run once, at boot
 void setup()  {
 
+	// find our slot to beacon into from the EEPROM on the Leonardo baord.
 	slotindex = eeprom_slotid();
 	// Kill radio TX as soon as we wake up
 	pinMode(LED, OUTPUT);	// TX on LED
@@ -88,27 +95,38 @@ void setup()  {
 	// FP LCD set up
 	pinMode(BLBLUE , OUTPUT);
 	pinMode(BLGREEN, OUTPUT);
-        pinMode(BLRED,   OUTPUT);   
+	pinMode(BLRED,   OUTPUT);   
 	
 	FPBLBLUE
 	fp_lcd.init();
-        fp_lcd.cursor_off();
-        FPPRINTRC(0,0,F("V2.7c     "));
-        FPPRINTRC(0,7,stations[slotindex].call);
-		FPPRINTRC(0,12,stations[slotindex].start_time);
-        FPPRINTRC(1,0,F("QRX Serial CNSOL"));
+    fp_lcd.cursor_off();
+    FPPRINTRC(0,0,F("V2.8a     "));
+// if slotindex isn't vlaid - sya so on the FP LCD
+	if (slotindex == 255) { // slot ID not valid in EEPROM
+    	FPPRINTRC(0,7,F("ERROR"));
+		FPPRINTRC(0,12,F("-1"));
+	}
+	else {
+    	FPPRINTRC(0,6,stations[slotindex].call);
+		FPPRINTRC(0,13,stations[slotindex].start_time);
+	}
 
-  // Serial debug output to desktop computer.  For product, send to LCD.
+  // Serial debug output to desktop computer.  
 #if DEBUG
+    FPPRINTRC(1,0,F("QRX Serial CNSOL"));
 	setup_debug_print();
-
 // dump EEPORM to serial console
 	dump_eeprom();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.8a"));
-  debug_println(slotindex);
-  debug_println(stations[slotindex].call);
+  debug_println(F("NCDXC/IARU Beacon IBP V2.8a"));
+	if (slotindex == 255) {
+		debug_println(F("SLOTID Not set"));
+	}
+	else {
+		debug_println(slotindex);
+		debug_println(stations[slotindex].call);
+	}
 
   FPPRINTRC(1,0,F("QRX INIT      "))
   
@@ -118,7 +136,6 @@ void setup()  {
 
 
   // GPS Setup 
-  {
     gps_serial.begin(9600);
     gps_serial.println(PMTK_SET_NMEA_OUTPUT_RMCONLY);
     gps_serial.println(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz NMEA sentence rate
@@ -130,7 +147,6 @@ void setup()  {
     // and end with stopListening, or else
     // interrupts disturb time-critical code sections.
     gps_serial.stopListening();
-  }
 
   FPPRINTRC(1,0,F("QRX INIT GPS DO "))
   do {
@@ -138,13 +154,11 @@ void setup()  {
   } while (! gps_discipline_clock(LONG_MAX));
   debug_println(F("*** GPS Locked "));
 
-  debug_println(F("*** GPS Discipline Milliclock"));
-  {
+	debug_println(F("*** GPS Discipline Milliclock"));
     gps_begin_milliclock_discipline(); 
     delay(5000);
     gps_end_milliclock_discipline();
-  }
-  debug_println(F("*** Milliclock disciplined "));
+	debug_println(F("*** Milliclock disciplined "));
   
   FPPRINTRC(1,0,F("QRX INIT RADIO"))
   debug_println(F("Radio init"));
@@ -154,12 +168,26 @@ void setup()  {
 	menuBtn.attach(MENUBTN);	// menu button on front panel
 	menuBtn.interval(10);   	// debounce time
   
+	if (slotindex == 255) {
+  		FPPRINTRC(1,0,F("               "));
+  		FPPRINTRC(1,0,F("BAD SLOT"));
+  		FPBLRED
+		while(1)
+			delay(1000);
+	}
   FPPRINTRC(1,0,F("               "));
   FPPRINTRC(1,0,F("OPER"));
   FPBLGREEN
+	debug_println(F("Operational"));
+
+//  prepare so we can reboot from within the loop code
+//	wdt_init();
+//	debug_println(F("WDT init"));
 
 }
 
+//  main cycle loop.  Starts right after setup() exits.  
+//  if we saw an interrupt tick, then call the scheduler
 void loop()
 {
   boolean tocked = false;

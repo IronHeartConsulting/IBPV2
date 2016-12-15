@@ -21,6 +21,9 @@
 #define ALC_PWR 13		// shutdown signal into ALC Power invertor - shared with USER LED
 #define MENUBTN 10		// menu button on front panel
 
+#define MAX_UPTIME  4800   // 10 days of 3 minute beacon loop cycles
+//   60 minutes an hour; 60/3 = 20 cycles/hour * 24 hours / day * 10 days = 4800
+
 // orginal
 //#define GPSRxD 11                // GPS software serial RxD pin
 //#define GPSTxD 8               // GPS software serial TxD pin - NOTE - non-standard usage, and incompat with Adafruit shield wiring
