@@ -34,8 +34,6 @@ void handle_tick() {
     next_tx_click = 5;
     FPPRINTRC(1,8,F("        "));
     setRadioMode(beaconMode);
-    setband(20);
-    setpower(50);
     break;
 
   case 0:
@@ -107,29 +105,29 @@ void runBand(byte band) {
  //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
  //*** delay(352);
 //
-//   New vlaue hand tuned at N6XG's place.  Probably due to adding code prior to the start of the loop
+//   New value hand tuned at N6XG's place.  Probably due to adding code prior to the start of the loop
  delay(134); 
     send_id(stations[slotindex].call);
 	delay(250);
 	// 1st long dash 100 watts
 	KEYDOWN 
-	delay(995);
+	delay(900);
 	KEYUP
 	// 2nd long dash 10 watts
 	setpower(40);
 	KEYDOWN 
-	delay(995);
+	delay(900);
 	KEYUP
 	// 3rd long dash 1 watt
 	setpower(30);
 	KEYDOWN 
-	delay(995);
+	delay(900);
 	KEYUP
 	// 4th long dash 100 milliwatts
 	setpower(20);
 	setALCPwr(HIGH);
 	KEYDOWN 
-	delay(995);
+	delay(900);
 	KEYUP
 	txoff();
 

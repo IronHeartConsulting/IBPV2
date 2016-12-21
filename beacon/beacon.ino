@@ -100,7 +100,8 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
     fp_lcd.cursor_off();
-    FPPRINTRC(0,0,F("V2.8a     "));
+    FPPRINTRC(0,0,F("          "));
+	FPPRINTRC(0,0,F(VERSION));
 // if slotindex isn't vlaid - sya so on the FP LCD
 	if (slotindex == 255) { // slot ID not valid in EEPROM
     	FPPRINTRC(0,7,F("ERROR"));
@@ -118,8 +119,7 @@ void setup()  {
 // dump EEPORM to serial console
 	dump_eeprom();
 #endif
-
-  debug_println(F("NCDXC/IARU Beacon IBP V2.8a"));
+  debug_println(F(VERSION));
 	if (slotindex == 255) {
 		debug_println(F("SLOTID Not set"));
 	}

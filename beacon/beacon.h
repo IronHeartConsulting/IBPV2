@@ -10,6 +10,7 @@
 
 
 // bunch of "beacon" defines
+#define VERSION "2.9"
 #define GPSECHO false
 #define CWLINE 5 		// pin connected ot CW keyer line - for morse code generation
 #define PTTLINE 12		// go to TX
@@ -65,7 +66,7 @@ enum rMode {beaconMode = 0, PSK31Mode = 1};
 #define EEProm_HWver			6
 #define EEProm_last 			7
 
-// funciton prototypes 
+// function prototypes 
 void dump_eeprom();
 
 #endif
