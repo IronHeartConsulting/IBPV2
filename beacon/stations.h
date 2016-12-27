@@ -3,7 +3,7 @@ struct station {
   char *location;
   char *op;
   byte start_time;
-} stations[18] = {
+} stations[MAX_SLOTID+1] = {
   {  "4u1un", "United Nations", "UNRC", 0 },
   {  "ve8at", "Canada", "RAC/NARC", 10 },
   {  "w6wx", "United States", "NCDXF", 20 },

@@ -10,7 +10,7 @@
 
 
 // bunch of "beacon" defines
-#define VERSION "2.9"
+#define VERSION "2.10"
 #define GPSECHO false
 #define CWLINE 5 		// pin connected ot CW keyer line - for morse code generation
 #define PTTLINE 12		// go to TX
@@ -28,6 +28,9 @@
 // orginal
 //#define GPSRxD 11                // GPS software serial RxD pin
 //#define GPSTxD 8               // GPS software serial TxD pin - NOTE - non-standard usage, and incompat with Adafruit shield wiring
+
+// time slot max index value
+#define MAX_SLOTID 17
 
 // SWAPPed
 #define GPSRxD 8                // GPS software serial RxD pin
@@ -68,6 +71,7 @@ enum rMode {beaconMode = 0, PSK31Mode = 1};
 
 // function prototypes 
 void dump_eeprom();
+int set_eeprom_sloitd(byte);
 
 #endif
 

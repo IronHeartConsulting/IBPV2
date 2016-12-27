@@ -7,15 +7,25 @@
 // get the slot ID from the EEPROM.  Validate and return
 byte eeprom_slotid() {
 
-	byte slotid = 255;
+	byte slotid;
 	slotid = EEPROM.read(EEProm_slotID);
-	if ( (slotid >= 0) && (slotid < 18) ) {
+	if ( (slotid >= 0) && (slotid <= MAX_SLOTID) ) {
 		return slotid;
 	}
 	// else...
 	return 255; // slotid in eeprom invalid, or eeprom busted
 }
 
+int set_eeprom_slotid(byte slotid) {
+
+	if ( (slotid >= 0) && (slotid <= MAX_SLOTID) ) {
+		debug_println(slotid);
+		EEPROM.write(EEProm_slotID,slotid);
+		return 0;
+	}
+	// else... return error
+	return -1;
+}
 
 // dump the content of the EEPROM - for debugging.  Goes to serial console only
 void dump_eeprom() {

@@ -11,10 +11,10 @@
 #include <LCDi2cNHD.h>
 #include <Bounce2.h>
 
+#include "beacon.h"
 #include "config.h"
 #include "debug.h"
 #include "stations.h"
-#include "beacon.h"
 #include "softreset.h"
 
 
@@ -102,7 +102,7 @@ void setup()  {
     fp_lcd.cursor_off();
     FPPRINTRC(0,0,F("          "));
 	FPPRINTRC(0,0,F(VERSION));
-// if slotindex isn't vlaid - sya so on the FP LCD
+// if slotindex isn't valid - say so on the FP LCD
 	if (slotindex == 255) { // slot ID not valid in EEPROM
     	FPPRINTRC(0,7,F("ERROR"));
 		FPPRINTRC(0,12,F("-1"));
