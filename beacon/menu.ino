@@ -5,7 +5,7 @@
 #include <LCDi2cNHD.h>
 
 
-enum button {SHORTPRESS = 1, LONGPRESS};
+enum button {SHORTPRESS = 1, LONGPRESS, TIMEOUT};
 enum button menuBtnPress();
 
 int runMenu() {
@@ -56,6 +56,9 @@ int runMenu() {
 					continue;
 				// else LONGPRESS fall thru 'continue' above *******
 				fp_lcd.setCursor(1,5);
+				// LONGPRESS - don't advance till button released
+				while(menuBtn.read() == HIGH) 
+					menuBtn.update();
 				// looking for a long press to confirm SLOTID selected
 				btnPressDuration = menuBtnPress();
 				if (btnPressDuration == LONGPRESS) { // slot id sleetion confirmed
@@ -88,12 +91,16 @@ enum button menuBtnPress()  {
 	while(menuBtn.read() == HIGH) 
 		menuBtn.update();
 	// ignore button not pressed
-	while(menuBtn.read() == LOW ) 
+	while(menuBtn.read() == LOW )  {
 		menuBtn.update();
+		// time out check
+	}
 	// button went high / pressed
 	while(menuBtn.read() == HIGH )  {
 		menuBtn.update();
 		holdCount++;
+		if (holdCount > 70000) 
+			break;  // timeout - LONGPRESS
 	}
 	if (holdCount < 20000) 
 		return SHORTPRESS;

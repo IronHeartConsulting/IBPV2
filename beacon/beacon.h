@@ -10,7 +10,7 @@
 
 
 // bunch of "beacon" defines
-#define VERSION "2.10"
+#define VERSION "2.11"
 #define GPSECHO false
 #define CWLINE 5 		// pin connected ot CW keyer line - for morse code generation
 #define PTTLINE 12		// go to TX
@@ -24,8 +24,9 @@
 
 #define MAX_UPTIME  4800   // 10 days of 3 minute beacon loop cycles
 //   60 minutes an hour; 60/3 = 20 cycles/hour * 24 hours / day * 10 days = 4800
+#define RADIO_RETRY_LIMIT 10  // try radio command limit
 
-// orginal
+// orignal
 //#define GPSRxD 11                // GPS software serial RxD pin
 //#define GPSTxD 8               // GPS software serial TxD pin - NOTE - non-standard usage, and incompat with Adafruit shield wiring
 

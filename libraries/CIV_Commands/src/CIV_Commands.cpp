@@ -384,7 +384,7 @@ uint8_t CIV::get_SerialData(uint8_t pdata[])
 uint8_t CIV::get_nByteData(uint8_t pdata[], boolean bSubCommand)
 {
 	uint8_t data_length = 0;
-	uint8_t start = 5;									//start of data in buffer
+	uint8_t start = 4;									//start of data in buffer
 	uint8_t buffer[MAXBUF];								//buffer with max of 128 bytes
 	uint8_t maxtries = 5;								//Maximum retries to get a packet designated for PC
 	//Lets see if a packet designated for PC is available within n-tries

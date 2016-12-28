@@ -64,6 +64,7 @@ volatile int last_millis = 0;
 // set on id send, reset on band change.  prevents starting up in the middle of the schedule.
 volatile boolean id_sent = false;
 
+
 // tick interrupt
 // keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
@@ -104,6 +105,7 @@ void setup()  {
 	FPPRINTRC(0,0,F(VERSION));
 // if slotindex isn't valid - say so on the FP LCD
 	if (slotindex == 255) { // slot ID not valid in EEPROM
+		FPBLRED
     	FPPRINTRC(0,7,F("ERROR"));
 		FPPRINTRC(0,12,F("-1"));
 	}
@@ -160,9 +162,17 @@ void setup()  {
     gps_end_milliclock_discipline();
 	debug_println(F("*** Milliclock disciplined "));
   
-  FPPRINTRC(1,0,F("QRX INIT RADIO"))
+  FPPRINTRC(1,0,F("QRX INIT RADIO  "))
   debug_println(F("Radio init"));
-  radioSetup();
+
+	int radioStatus = radioSetup();
+	if (radioStatus < 0) { // radio not talking
+  		FPPRINTRC(1,0,F("               "));
+  		FPPRINTRC(1,0,F("RADIO error"));
+  		FPBLRED
+		while(1)
+			delay(1000);
+	}
   CWSetup();
 	pinMode(MENUBTN,INPUT_PULLUP);
 	menuBtn.attach(MENUBTN);	// menu button on front panel
