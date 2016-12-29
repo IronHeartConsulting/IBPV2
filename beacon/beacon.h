@@ -10,7 +10,7 @@
 
 
 // bunch of "beacon" defines
-#define VERSION "2.11"
+#define VERSION "2.12"
 #define GPSECHO false
 #define CWLINE 5 		// pin connected ot CW keyer line - for morse code generation
 #define PTTLINE 12		// go to TX
