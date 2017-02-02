@@ -87,13 +87,13 @@ void setpower(byte dBm) {
   debug_println(F("dBm") );
   switch (dBm) {
     case 50:  // 50 dBm = 100 watts
-      newPow = 249;
+      newPow = 235;
       break;
     case 40:  // 40 dBm = 10 watts
-      newPow = 30;
+      newPow = 28;
       break;
     case 30:  // 30 dBm = 1 watts
-      newPow = 2;
+      newPow = 0;
       break;
     case 20:  // 20 dBm = 100 milliwatts
 //	turn on the ALC voltage.  We do it here to give it time to stablizie before key down
