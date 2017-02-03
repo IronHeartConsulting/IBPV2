@@ -1,5 +1,6 @@
 void handle_tick() {
-  int schedule_ticks = wall_ticks - stations[slotindex].start_time;
+//***	schedule_ticks = (schedule_ticks + 1 ) % (3*60);
+//***  int schedule_ticks = wall_ticks - stations[slotindex].start_time;
 
   // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
@@ -12,17 +13,25 @@ void handle_tick() {
   FPPRINTRC(1,5,"           ");
   FPPRINTRC(1,5,wall_ticks);
   debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
-  debug_print(F(" schedule_ticks=")); debug_print_dec(schedule_ticks);
+  debug_print(F(" schedule_ticks=")); debug_println_dec(schedule_ticks);
   // debug_print(F(" station.start_time=")); debug_print_dec(station.start_time);
-  debug_print(F(" next_tx_click=")); debug_println_dec(next_tx_click);
+  // debug_print(F(" next_tx_click=")); debug_println_dec(next_tx_click);
+	if (slotNotFound) {
+		if ((wall_ticks - stations[slotindex].start_time) == 0) {
+			slotNotFound = 0;
+			schedule_ticks = 0;
+		}
+		else
+			return;
+	}
 
   switch(schedule_ticks) {
-  case -20:
+  case 160:
     // not beaconing, so do GPS clock discipline.
     gps_discipline_clock(32768);
     break;
 
-  case -1:
+  case 179:
     next_tx_click = 5;
     FPPRINTRC(1,8,"        ");
     setRadioMode(beaconMode);
@@ -63,11 +72,11 @@ void handle_tick() {
     gps_discipline_clock(32768);
     break;
 
-  case 168:
+  case 140:
     // not beaconing, so do millis clock discipline for 10s
     gps_begin_milliclock_discipline();
     break;
-  case 170:
+  case 150:
     // not beaconing, finish 10s of millis clock discipline.
     gps_end_milliclock_discipline();
     break;
@@ -91,7 +100,7 @@ void runBand(byte band) {
  //*** delay(352);
 //
 //   New vlaue hand tuned at N6XG's place.  Probably due to adding code prior to the start of the loop
- delay(134); 
+	delay(134); 
     send_id(stations[slotindex].call);
 	delay(250);
 	// 1st long dash 100 watts

@@ -13,3 +13,7 @@ beacon:		beacon.ino
 	$(ARDUINO)/Arduino $(PREF_BUILD_PATH) $(BUILD_FLAGS) $(IBPV2)/beacon.ino
 	cp $(IBPV2)/build/beacon.cpp.hex ../release/beacon.hex
 	md5 -q ../release/beacon.hex >../release/md5sum
+	cat ../release/md5sum
+
+clean:
+	rm build/*.o

@@ -21,7 +21,7 @@ void radioSetup() {
   Serial1.begin(radio_baudrate);
   
 // init the radio
-#if DEBUG
+#if DEBUG_RADIO
 	_dbg.RS232DebugON();
 #endif
 

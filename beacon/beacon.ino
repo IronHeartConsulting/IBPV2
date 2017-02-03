@@ -20,6 +20,8 @@
 // slotindex - 0-17 index into stations array for callsign, club name, and time slot in seconds
 //   255 indicates don't transmit
 byte slotindex = 255;
+int schedule_ticks = 255;
+int slotNotFound = 1;
 
 // RxD, TxD
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);
@@ -59,7 +61,8 @@ volatile boolean id_sent = false;
 // tick interrupt
 // keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
-  wall_ticks = (wall_ticks+1) % (3*60);
+	wall_ticks = (wall_ticks+1) % (3*60);
+	schedule_ticks = (schedule_ticks + 1 ) % (3*60);
 //  if ((wall_ticks - stations[slotindex].start_time) == next_tx_click) {
 //    txon();
 //  }
@@ -90,8 +93,8 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.7c     ");
-        FPPRINTRC(0,7,stations[slotindex].call);
+        FPPRINTRC(0,0,"V2.7d ");
+        FPPRINTRC(0,6,stations[slotindex].call);
 		FPPRINTRC(0,12,stations[slotindex].start_time);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
 
