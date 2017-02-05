@@ -22,6 +22,7 @@ void gps_end_milliclock_discipline() {
  */
 boolean gps_discipline_clock(long tries) {
   boolean done = false;
+	int new_wall_ticks;
   debug_println(F("*** GPS Discipline clock start"));
   Serial.flush();
 
@@ -52,7 +53,11 @@ boolean gps_discipline_clock(long tries) {
           //
           //   Move to "the other side of the the 1PPS tick"
           //  The message appears to arrive AFTER the 1 second tick
-          	wall_ticks = 1 + ((minute * 60) + second) % (3*60);
+          	new_wall_ticks = 1 + ((minute * 60) + second) % (3*60);
+			if ( (wall_ticks - new_wall_ticks) != 0) {  // advance time
+				slotNotFound = 1;  // rese t,ooking for slot time
+				wall_ticks = new_wall_ticks;
+			}
           	debug_print(F("handle_gps_parsing says update wall_ticks to "));
           	debug_print(wall_ticks);
           	debug_print(F(" fix age "));

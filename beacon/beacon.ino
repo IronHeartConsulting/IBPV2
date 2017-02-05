@@ -93,7 +93,7 @@ void setup()  {
 	FPBLBLUE
 	fp_lcd.init();
         fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.7d ");
+        FPPRINTRC(0,0,"V2.7e ");
         FPPRINTRC(0,6,stations[slotindex].call);
 		FPPRINTRC(0,12,stations[slotindex].start_time);
         FPPRINTRC(1,0,"QRX Serial CNSOL");
@@ -106,7 +106,7 @@ void setup()  {
 	dump_eeprom();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.7c"));
+  debug_println(F("NCDXC/IARU Beacon IBPV2.7e"));
   debug_println(slotindex);
   debug_println(stations[slotindex].call);
 
@@ -149,7 +149,7 @@ void setup()  {
   FPPRINTRC(1,0,"QRX INIT RADIO")
   debug_println(F("Radio init"));
   radioSetup();
-  CWSetup();
+  CWSetup(stations[slotindex].call);
   
   FPPRINTRC(1,0,"               ");
   FPPRINTRC(1,0,"OPER");
