@@ -8,6 +8,7 @@
 #ifndef BEACON_H
 #define BEACON_H
 
+#define VERSION "2.7f"
 
 // bunch of "beacon" defines
 #define GPSECHO false
@@ -19,6 +20,7 @@
 #define PPS 7			// pin connected to GPS PPS interrupt input
 #define LED 13			// LED on PCA
 #define ALC_PWR 13		// shutdown signal into ALC Power invertor - shared with USER LED
+#define MENUBTN 10		// front panel menu button
 
 // orginal
 //#define GPSRxD 11                // GPS software serial RxD pin

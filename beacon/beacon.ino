@@ -8,11 +8,12 @@
 #include <Wire.h>
 #include <inttypes.h>
 #include <LCDi2cNHD.h>
+#include <Bounce2.h>
 
+#include "beacon.h"
 #include "config.h"
 #include "debug.h"
 #include "stations.h"
-#include "beacon.h"
 
 
 //  Global vars
@@ -22,12 +23,16 @@
 byte slotindex = 255;
 int schedule_ticks = 255;
 int slotNotFound = 1;
+int remainingSkipCount;    // count down counter of 3 min cycles we are skipping
+int skipEnabled = 0;		// boolean flag - Skip TX enable
 
 // RxD, TxD
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);
 TinyGPS gps;
 // rows, columns, I2C address, display (not use, set to zero)
 LCDi2cNHD fp_lcd = LCDi2cNHD(2,16,0x50>>1,0);
+// front panel Menu button - Bounce (2) object
+Bounce menuBtn = Bounce();
 
 #define GPSECHO false
 // turn on only the second sentence (GPRMC)
@@ -78,25 +83,23 @@ void tick() {
 
 void setup()  {
 
+	radioConfig();
 	slotindex = eeprom_slotid();
-	// Kill radio TX as soon as we wake up
-	pinMode(LED, OUTPUT);	// TX on LED
-	setALCPwr(LOW);
-	pinMode(PTTLINE, OUTPUT);
-	txoff();
+
+	pinMode(MENUBTN,INPUT_PULLUP);
 
 	// FP LCD set up
 	pinMode(BLBLUE , OUTPUT);
 	pinMode(BLGREEN, OUTPUT);
-        pinMode(BLRED,   OUTPUT);   
+	pinMode(BLRED,   OUTPUT);   
 	
 	FPBLBLUE
 	fp_lcd.init();
-        fp_lcd.cursor_off();
-        FPPRINTRC(0,0,"V2.7e ");
-        FPPRINTRC(0,6,stations[slotindex].call);
-		FPPRINTRC(0,12,stations[slotindex].start_time);
-        FPPRINTRC(1,0,"QRX Serial CNSOL");
+	fp_lcd.cursor_off();
+	FPPRINTRC(0,0,VERSION);
+	FPPRINTRC(0,6,stations[slotindex].call);
+	FPPRINTRC(0,13,stations[slotindex].start_time);
+	FPPRINTRC(1,0,"QRX Serial CNSOL");
 
   // Serial debug output to desktop computer.  For product, send to LCD.
 #if DEBUG
@@ -106,68 +109,93 @@ void setup()  {
 	dump_eeprom();
 #endif
 
-  debug_println(F("NCDXC/IARU Beacon IBPV2.7e"));
-  debug_println(slotindex);
-  debug_println(stations[slotindex].call);
+	debug_print(F("NCDXC/IARU Beacon IBP"));
+	debug_println(F(VERSION));
+	debug_println(slotindex);
+	debug_println(stations[slotindex].call);
 
-  FPPRINTRC(1,0,"QRX INIT      ")
+	FPPRINTRC(1,0,"QRX INIT        ")
   
   // PPS interrupt from GPS on pin 3 (Int.0) on Arduino Leonardo
-  pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
-  attachInterrupt(digitalPinToInterrupt(PPS), tick, RISING); // tick happens 0.5s after GPS serial sends the time.
+	pinMode(3, INPUT_PULLUP);         // PPS is 2.8V so give it pullup help
+	attachInterrupt(digitalPinToInterrupt(PPS), tick, RISING); // tick happens 0.5s after GPS serial sends the time.
 
 
   // GPS Setup 
-  {
-    gps_serial.begin(9600);
-    gps_serial.println(PMTK_SET_NMEA_OUTPUT_RMCONLY);
-    gps_serial.println(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz NMEA sentence rate
-    gps_serial.println(PMTK_API_SET_FIX_CTL_1HZ);   // 1 Hz fix rate
+	{
+		gps_serial.begin(9600);
+		gps_serial.println(PMTK_SET_NMEA_OUTPUT_RMCONLY);
+		gps_serial.println(PMTK_SET_NMEA_UPDATE_1HZ);   // 1 Hz NMEA sentence rate
+		gps_serial.println(PMTK_API_SET_FIX_CTL_1HZ);   // 1 Hz fix rate
 
-    delay(1000);
-    // Stop interrupts from GPS serial input.
-    // All GPS readers have/ to call listen() 
-    // and end with stopListening, or else
-    // interrupts disturb time-critical code sections.
-    gps_serial.stopListening();
-  }
+		delay(1000);
+		// Stop interrupts from GPS serial input.
+		// All GPS readers have/ to call listen() 
+		// and end with stopListening, or else
+		// interrupts disturb time-critical code sections.
+		gps_serial.stopListening();
+	}
 
-  FPPRINTRC(1,0,"QRX INIT GPS DO")
-  do {
-    debug_println(F("*** GPS Discipline clock"));
-  } while (! gps_discipline_clock(LONG_MAX));
-  debug_println(F("*** GPS Locked "));
+	// Show satts info while we are trying to get GPS to Lock
+	FPPRINTRC(1,0,"QRX INIT GPS DO")
+	do {
+		debug_println(F("*** GPS Discipline clock"));
+	} while (! gps_discipline_clock(LONG_MAX));
+	debug_println(F("*** GPS Locked "));
 
-  debug_println(F("*** GPS Discipline Milliclock"));
-  {
-    gps_begin_milliclock_discipline(); 
-    delay(5000);
-    gps_end_milliclock_discipline();
-  }
-  debug_println(F("*** Milliclock disciplined "));
+	debug_println(F("*** GPS Discipline Milliclock"));
+	{
+		gps_begin_milliclock_discipline(); 
+		delay(5000);
+		gps_end_milliclock_discipline();
+	}
+	debug_println(F("*** Milliclock disciplined "));
   
-  FPPRINTRC(1,0,"QRX INIT RADIO")
-  debug_println(F("Radio init"));
-  radioSetup();
-  CWSetup(stations[slotindex].call);
+	FPPRINTRC(1,0,"QRX INIT RADIO  ")
+	debug_println(F("Radio init"));
+	radioSetup();
+	CWSetup(stations[slotindex].call);
+	menuBtn.attach(MENUBTN);   // FP menu button
+	menuBtn.interval(10);		// debounce time
   
-  FPPRINTRC(1,0,"               ");
-  FPPRINTRC(1,0,"OPER");
-  FPBLGREEN
+	FPPRINTRC(1,0,"               ");
+
+
+//  menu operation goes here
+//    poll for 10 secodns to se if the menu button is pressed.
+//    If not, then move on and ignore it
+ 	FPPRINTRC(1,0,"MENU");
+	runMenu();  // it will return
+	fp_lcd.blink_off();
+	fp_lcd.cursor_off();
+	if (skipEnabled) {	
+		FPPRINTRC(1,0,"SKIP");
+		FPPRINTRC(1,9,F("      "));
+		FPPRINTRC(1,9,remainingSkipCount);
+	}
+	else {
+		FPPRINTRC(1,0,"OPER");
+	}
+	FPPRINTRC(0,0,VERSION);
+	FPPRINTRC(0,5,F("         "));
+	FPPRINTRC(0,6,stations[slotindex].call);
+	FPPRINTRC(0,13,stations[slotindex].start_time);
+	FPBLGREEN
+
 
 }
 
 void loop()
 {
-  boolean tocked = false;
-  if (ticked) {
-    ticked = false;
-    tocked = true;
-  }
+	boolean tocked = false;
+	if (ticked) {
+		ticked = false;
+		tocked = true;
+	}
 
-  if (tocked) {
-    handle_tick();
-  }
+	if (tocked) {
+		handle_tick();
+	}
 
 }
 

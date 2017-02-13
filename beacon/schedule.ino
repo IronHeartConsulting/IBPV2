@@ -5,17 +5,10 @@ void handle_tick() {
   // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
 
-	if (slotindex == 255) {  // don't know our TX slot, just exit
-  		FPPRINTRC(1,5,"Time slot not set");
-		return;
-	}
-		
-  FPPRINTRC(1,5,"           ");
+  FPPRINTRC(1,5,"   ");
   FPPRINTRC(1,5,wall_ticks);
   debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
   debug_print(F(" schedule_ticks=")); debug_println_dec(schedule_ticks);
-  // debug_print(F(" station.start_time=")); debug_print_dec(station.start_time);
-  // debug_print(F(" next_tx_click=")); debug_println_dec(next_tx_click);
 	if (slotNotFound) {
 		if ((wall_ticks - stations[slotindex].start_time) == 0) {
 			slotNotFound = 0;
@@ -33,12 +26,24 @@ void handle_tick() {
 
   case 179:
     next_tx_click = 5;
-//**    FPPRINTRC(1,8,"        ");
-	FPPRINTRC(1,0,"TX           ");
-    setRadioMode(beaconMode);
-    setband(20);
-	setpower(50);
-	setALCPwr(LOW);  // make sure ALC ctl voltage is shutdown or off
+	// check if our time in the penalty box is up
+	if( skipEnabled) {
+		if( (--remainingSkipCount) > 0) {
+			FPPRINTRC(1,9,F("    "));
+			FPPRINTRC(1,9,remainingSkipCount);
+		}
+		else { // penalty time is up, out of the box
+			FPPRINTRC(1,0,"OPER");
+			FPPRINTRC(1,9,"    ");
+			skipEnabled = 0;
+		}
+	}
+	else {  // not skipping
+		FPPRINTRC(1,0,"TX           ");
+    	setRadioMode(beaconMode);
+    	setband(20);
+		setpower(50);
+	}
     break;
 
   case 0:
@@ -64,13 +69,17 @@ void handle_tick() {
   case 40:
 // 10 sequence
 	runBand(10);
+	if (!skipEnabled) 
+		FPPRINTRC(1,0,"OPER");
     break;
 
   case 60:
-	setband(20);   // so we can listen to the start of the next cycle
+	if (!skipEnabled)
+		setband(20);   // so we can listen to the start of the next cycle
 	// QSY to 14.070 USB so we can monitor PSK31
 	setRadioMode(PSK31Mode);
     // not beaconing, so do GPS clock discipline.
+	FPPRINTRC(1,7,F("         "));
     gps_discipline_clock(32768);
     break;
 
@@ -92,10 +101,11 @@ void handle_tick() {
 
 void runBand(byte band) {
 
-//**	FPPRINTRC(1,0,"TX           ");
+	if (skipEnabled) 
+		return;
+
 	setband(band);
  	setpower(50);
-//***	setALCPwr(LOW);  // make sure ALC ctl voltage is shutdown or off
  // This delay is tuned to match the V1 controllers, as meausred by FAROS
  // Don't change without re-calibrating.
  //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
@@ -124,12 +134,12 @@ void runBand(byte band) {
 	KEYUP
 	// 4th long dash 100 milliwatts
 	setpower(20);
-	setALCPwr(HIGH);
 	KEYDOWN 
 	delay(995);
 	KEYUP
 	txoff();
 	setpower(50);
+	FPPRINTRC(1,7,F("         "));
 
 	return;
 }

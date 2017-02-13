@@ -10,6 +10,18 @@ uint8_t buff[MAXBUF];
 BCNDebug _dbg;
 CIV radio(controller_address, radio_address, &_dbg);
 
+// do all the Arduino digitial stuff right away
+void radioConfig () {
+
+	pinMode(LED, OUTPUT);
+	pinMode(CWLINE, OUTPUT);
+	pinMode(PTTLINE, OUTPUT);
+
+	digitalWrite(PTTLINE, PTTOFF);
+    digitalWrite(CWLINE,LOW);
+	digitalWrite(ALC_PWR, LOW);
+
+}
 
 // init the radio and the CI-V interface
 void radioSetup() {
@@ -17,7 +29,7 @@ void radioSetup() {
   digitalWrite(PTTLINE, PTTOFF);
   pinMode(CWLINE, OUTPUT);
   pinMode(PTTLINE, OUTPUT);
-  setALCPwr(LOW);
+	digitalWrite(ALC_PWR, LOW);
   Serial1.begin(radio_baudrate);
   
 // init the radio
@@ -85,6 +97,7 @@ void setpower(byte dBm) {
   debug_print(F("Set power to ") );
   debug_print_dec(dBm);
   debug_println(F("dBm") );
+	digitalWrite(ALC_PWR, LOW);
   switch (dBm) {
     case 50:  // 50 dBm = 100 watts
       newPow = 230;
@@ -97,7 +110,7 @@ void setpower(byte dBm) {
       break;
     case 20:  // 20 dBm = 100 milliwatts
 //	turn on the ALC voltage.  We do it here to give it time to stablizie before key down
-//***		digitalWrite(ALC_PWR, HIGH);
+	  digitalWrite(ALC_PWR, HIGH);
       newPow = 0;
       break;
     default:
@@ -116,11 +129,6 @@ void setRawPwrM2(byte newPow) {
 	radio.set_ReceiveTransmitfunction(powRF,newPow);   
 }
 
-void setALCPwr(byte newState) {
-		digitalWrite(ALC_PWR, newState);
-	
-}
-
 // Caution: this is called in an interrupt routine!
 void txon() {
     if (id_sent) {
@@ -136,12 +144,10 @@ void txon() {
 }
 
 void txoff() {
-	digitalWrite(ALC_PWR, LOW);
-// ***    digitalWrite(LED, LOW);
-    digitalWrite(PTTLINE,PTTOFF);
-	setALCPwr(LOW);
-    FPBLGREEN
-    FPPRINTRC(1,0,"OPER");
     digitalWrite(CWLINE,LOW);
+	digitalWrite(ALC_PWR, LOW);
+    digitalWrite(PTTLINE,PTTOFF);
+    FPBLGREEN
+//***    FPPRINTRC(1,0,"OPER");
     debug_println(F("RX"));
 }
