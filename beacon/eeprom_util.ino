@@ -16,6 +16,15 @@ byte eeprom_slotid() {
 	return 255; // slotid in eeprom invalid, or eeprom busted
 }
 
+// read the delay value.
+//  stored as a little endin two byte sequence
+///  re-assemble and return a value
+uint16_t eepromDelay() {
+	uint16_t result;
+	result = EEPROM.read(EEProm_delayL);
+	result += EEPROM.read(EEProm_delayH)*256;
+	return(result);
+}
 
 // dump the content of the EEPROM - for debugging.  Goes to serial console only
 void dump_eeprom() {

@@ -114,7 +114,9 @@ void runBand(byte band) {
 //   New value hand tuned at N6XG's place.  Probably due to adding code prior to the start of the loop
 //   2/4 - N6XG suggests add 2ms more delay
 //***	delay(136); 
-	delay(248); 
+//***	delay(248); 
+//   delay now read from EEPROM
+	delay(startDelay); 
 	FPBLRED
     send_id();
 	delay(250);

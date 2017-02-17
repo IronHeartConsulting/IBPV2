@@ -18,7 +18,12 @@ int runMenu() {
 	btnPressDuration = menuBtnPress();
 	if (btnPressDuration == TIMEOUT)
 		return(0);
-	// menu button pressed.  Display the menu
+// menu button pressed.  Either go to serial Console, or menu on LCD 
+	Serial.begin(115200);
+	if( Serial) {  // serial UART active - connect thru it
+		runConsole();
+		return(0);
+	}
 	fp_lcd.clear();
 	FPBLGREEN
 // show menu

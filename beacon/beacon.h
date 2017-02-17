@@ -8,7 +8,7 @@
 #ifndef BEACON_H
 #define BEACON_H
 
-#define VERSION "2.7f"
+#include "version.h"
 
 // bunch of "beacon" defines
 #define GPSECHO false
@@ -61,7 +61,9 @@ enum rMode {beaconMode = 0, PSK31Mode = 1};
 #define EEProm_slotID			4
 #define EEProm_sernum			5
 #define EEProm_HWver			6
-#define EEProm_last 			7
+#define EEProm_delayL 			7
+#define EEProm_delayH 			8
+#define EEProm_last 			8
 
 // funciton prototypes 
 void dump_eeprom();

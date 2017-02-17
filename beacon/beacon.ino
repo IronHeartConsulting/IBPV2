@@ -21,6 +21,7 @@
 // slotindex - 0-17 index into stations array for callsign, club name, and time slot in seconds
 //   255 indicates don't transmit
 byte slotindex = 255;
+uint16_t	startDelay;			// calibrated delay at start of beacon cycle - storedi n EEPROM and derived from FAROS observations
 int schedule_ticks = 255;
 int slotNotFound = 1;
 int remainingSkipCount;    // count down counter of 3 min cycles we are skipping
@@ -85,6 +86,7 @@ void setup()  {
 
 	radioConfig();
 	slotindex = eeprom_slotid();
+	startDelay = eepromDelay();   // used in shcediule loop at start of CW
 
 	pinMode(MENUBTN,INPUT_PULLUP);
 
