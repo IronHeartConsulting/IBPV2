@@ -21,6 +21,7 @@ int runConsole()   {
 	FPBLGREEN
 	FPPRINTRC(0,0,F("CONS connected"));
 	while(1) {
+		Serial.println("Ready!");
     	sCmd.readSerial();
 	}
 	return(0);

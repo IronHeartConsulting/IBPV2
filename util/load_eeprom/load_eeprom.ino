@@ -64,6 +64,9 @@ void setup()  {
 	// Kill radio TX as soon as we wake up
 	pinMode(LED, OUTPUT);	// TX on LED
 	pinMode(PTTLINE, OUTPUT);
+	pinMode(CWLINE, OUTPUT);
+	digitalWrite(PTTLINE, PTTOFF);
+	digitalWrite(CWLINE, LOW);
 
 	// FP LCD set up
 	pinMode(BLBLUE , OUTPUT);
@@ -95,6 +98,7 @@ sCmd.setDefaultHandler(wtf);        // handle un-recongized command
   FPPRINTRC(1,0,"               ");
   FPPRINTRC(1,0,"CMD Loop");
   FPBLGREEN
+	Serial.println("Ready!");
 
 }
 
