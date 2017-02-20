@@ -20,8 +20,8 @@ int runConsole()   {
 	fp_lcd.clear();
 	FPBLGREEN
 	FPPRINTRC(0,0,F("CONS connected"));
+	Serial.println("Ready!");
 	while(1) {
-		Serial.println("Ready!");
     	sCmd.readSerial();
 	}
 	return(0);

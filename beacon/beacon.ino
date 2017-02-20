@@ -87,6 +87,7 @@ void setup()  {
 	radioConfig();
 	slotindex = eeprom_slotid();
 	startDelay = eepromDelay();   // used in shcediule loop at start of CW
+	Serial.begin(115200);
 
 	pinMode(MENUBTN,INPUT_PULLUP);
 
@@ -139,7 +140,7 @@ void setup()  {
 	}
 
 	// Show satts info while we are trying to get GPS to Lock
-	FPPRINTRC(1,0,"QRX INIT GPS DO")
+	FPPRINTRC(1,0,"QRX INIT GPS")
 	do {
 		debug_println(F("*** GPS Discipline clock"));
 	} while (! gps_discipline_clock(LONG_MAX));
