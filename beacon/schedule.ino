@@ -1,20 +1,26 @@
 void handle_tick() {
+//   advancement of schedule ticks is done in the interrupt handler, so while the
+//     radio is hogging the CPU, we still keep time
 //***	schedule_ticks = (schedule_ticks + 1 ) % (3*60);
+
+//   This approach issn't work, as it went negative when start_time > 100, 
+//   and walls clock went 0.
 //***  int schedule_ticks = wall_ticks - stations[slotindex].start_time;
 
   // TX starts happen inside interrupt.
   // IDs, TX stops, power changes, and band changes happen here
-
-  FPPRINTRC(1,5,"   ");
-  FPPRINTRC(1,5,wall_ticks);
-  debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
-  debug_print(F(" schedule_ticks=")); debug_println_dec(schedule_ticks);
+	if (!TXEnabled) {
+		FPPRINTRC(1,5,"   ");
+		FPPRINTRC(1,5,wall_ticks);
+	}
+	debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
+	debug_print(F(" schedule_ticks=")); debug_println_dec(schedule_ticks);
 	if (slotNotFound) {
-		if ((wall_ticks - stations[slotindex].start_time) == 0) {
+		if ((wall_ticks - stations[slotindex].start_time) == -2) {
 			slotNotFound = 0;
-			schedule_ticks = 0;
+			schedule_ticks = 178;
 		}
-		else
+		else // still looking for wall_ticks == 0
 			return;
 	}
 
@@ -25,7 +31,6 @@ void handle_tick() {
     break;
 
   case 179:
-    next_tx_click = 5;
 	// check if our time in the penalty box is up
 	if( skipEnabled) {
 		if( (--remainingSkipCount) > 0) {
@@ -39,6 +44,7 @@ void handle_tick() {
 		}
 	}
 	else {  // not skipping
+		TXEnabled = 1;
 		FPPRINTRC(1,0,"TX           ");
     	setRadioMode(beaconMode);
     	setband(20);
@@ -71,6 +77,7 @@ void handle_tick() {
 	runBand(10);
 	if (!skipEnabled) 
 		FPPRINTRC(1,0,"OPER");
+	TXEnabled = 0;
     break;
 
   case 60:

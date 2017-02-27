@@ -34,6 +34,7 @@
 #define radio_baudrate 4800
 #define CIV_CA 0xE0
 #define CIV_RA 0x76
+#define RADIO_RETRY_LIMIT 10  // # of times to init radio, before giving up
 
 // Front Panel LCD - I2C comm access, RGB, 16 x 2, NHD P/N .....
 #define BLBLUE	6

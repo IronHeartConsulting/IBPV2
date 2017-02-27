@@ -24,7 +24,9 @@ void radioConfig () {
 }
 
 // init the radio and the CI-V interface
-void radioSetup() {
+int radioSetup() {
+
+	radio_resp rStatus;
 
   digitalWrite(PTTLINE, PTTOFF);
   pinMode(CWLINE, OUTPUT);
@@ -37,7 +39,29 @@ void radioSetup() {
 	_dbg.RS232DebugON();
 #endif
 
-  radio.set_mode(CW);
+// first commmand - see if radio is replying
+    uint16_t timeoutCount = 0;
+    do {
+        rStatus = radio.set_mode(CW);
+        if (rStatus == commandTimeout)
+            timeoutCount++;
+            delay(1000);   // 1 second on a time out
+    } while(timeoutCount < RADIO_RETRY_LIMIT && rStatus == commandTimeout);
+
+    switch(rStatus) {
+        case commandOK:
+            break;
+        case commandNG:
+            return -1;
+            break;
+        case commandTimeout:
+            return -1;
+            break;
+    }
+
+	radio.set_Togglefunction(toggleBREAKin,0);	// turn off QSK
+	radio.toggle_Split(splitOFF);
+	radio.set_vfomode(vfoA);
   radio.adjustSliders(keyerType,0);  // straight key
   radio.get_ReceiveTransmitfunction(powRF);
   radio.set_ReceiveTransmitfunction(powRF,128);   // set TX power to 50%, or 50 watts

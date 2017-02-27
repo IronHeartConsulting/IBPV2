@@ -26,6 +26,7 @@ int schedule_ticks = 255;
 int slotNotFound = 1;
 int remainingSkipCount;    // count down counter of 3 min cycles we are skipping
 int skipEnabled = 0;		// boolean flag - Skip TX enable
+byte TXEnabled = 0;
 
 // RxD, TxD
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);
@@ -45,9 +46,6 @@ volatile boolean ticked = false;
 
 // wall_ticks counts seconds and goes from 0-180 because there is a 3-minute beacon schedule.
 volatile byte wall_ticks = 0;
-
-// Set this to the click second at which you want the tick() interrupt handler to key the transmitter.
-volatile byte next_tx_click = 255;
 
 // Set this to true if the tick() interrupt handler to measure update millis_per_second to the most recent value.
 // It should never be on if there is a chance that other interrupts will interfere or if interrupts are disabled, such as during SoftwareSerial output (input is OK).
@@ -69,9 +67,6 @@ volatile boolean id_sent = false;
 void tick() {
 	wall_ticks = (wall_ticks+1) % (3*60);
 	schedule_ticks = (schedule_ticks + 1 ) % (3*60);
-//  if ((wall_ticks - stations[slotindex].start_time) == next_tx_click) {
-//    txon();
-//  }
 
   if (disciplining_milliclock) {
     int t = last_millis;
@@ -156,7 +151,16 @@ void setup()  {
   
 	FPPRINTRC(1,0,"QRX INIT RADIO  ")
 	debug_println(F("Radio init"));
-	radioSetup();
+	int radioStatus = radioSetup();
+
+    if (radioStatus < 0) { // radio not talking
+        FPPRINTRC(1,0,F("               "));
+        FPPRINTRC(1,0,F("RADIO error"));
+        FPBLRED
+        while(1)
+            delay(1000);
+    }
+
 	CWSetup(stations[slotindex].call);
 	menuBtn.attach(MENUBTN);   // FP menu button
 	menuBtn.interval(10);		// debounce time
