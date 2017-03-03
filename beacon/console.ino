@@ -6,7 +6,7 @@
 #include "config.h"
 #include "BCNDebug.h"
 #include <LCDi2cNHD.h>
-#include <EEPROM.H>
+#include <EEPROM.h>
 SerialCommand sCmd;     // The  SerialCommand object
 
 int runConsole()   {

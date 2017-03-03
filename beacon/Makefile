@@ -1,4 +1,5 @@
 ARDUINO=/Applications/Arduino_164.app/Contents/MacOS
+# ARDUINO=/Applications/Arduino.app/Contents/MacOS
 IBPV2='/Users/kevin/working/Ham Radio/IBPV2_VE8AT_version/beacon'
 VERSION=2_8c
 VERSION_P="2.8c"
@@ -10,6 +11,7 @@ all:	version.h beacon
 
 beacon:		beacon.ino
 	$(ARDUINO)/Arduino $(PREF_BUILD_PATH) $(BUILD_FLAGS) $(IBPV2)/beacon.ino
+#	cp $(IBPV2)/build/beacon.ino.hex ../release/beacon_$(VERSION).hex
 	cp $(IBPV2)/build/beacon.cpp.hex ../release/beacon_$(VERSION).hex
 	md5 -q ../release/beacon_$(VERSION).hex >../release/md5sum_$(VERSION)
 	cat ../release/md5sum_$(VERSION)
