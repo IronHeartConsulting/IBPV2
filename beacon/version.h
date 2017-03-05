@@ -9,7 +9,7 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#define VERSION "2.8c"
+#define VERSION "2.8d"
 
 #endif
 

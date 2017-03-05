@@ -126,7 +126,7 @@ void runBand(byte band) {
 	delay(startDelay); 
 	FPBLRED
     send_id();
-	delay(250);
+	delay(218);
 	// 1st long dash 100 watts
 	KEYDOWN 
 	delay(995);
