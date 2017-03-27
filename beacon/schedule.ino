@@ -116,35 +116,30 @@ void runBand(byte band) {
  // This delay is tuned to match the V1 controllers, as meausred by FAROS
  // Don't change without re-calibrating.
  //    It's from the start of the epoch.  Changing the GPS discipline routine will affect this value
- //*** delay(352);
-//
-//   New value hand tuned at N6XG's place.  Probably due to adding code prior to the start of the loop
-//   2/4 - N6XG suggests add 2ms more delay
-//***	delay(136); 
-//***	delay(248); 
 //   delay now read from EEPROM
 	delay(startDelay); 
 	FPBLRED
     send_id();
-	delay(218);
+// no delay needed, as the CW routines will insert a 3 dit space at the end of the message!
+//	delay(218);
 	// 1st long dash 100 watts
 	KEYDOWN 
-	delay(995);
+	delay(895);
 	KEYUP
 	// 2nd long dash 10 watts
 	setpower(40);
 	KEYDOWN 
-	delay(995);
+	delay(895);
 	KEYUP
 	// 3rd long dash 1 watt
 	setpower(30);
 	KEYDOWN 
-	delay(995);
+	delay(895);
 	KEYUP
 	// 4th long dash 100 milliwatts
 	setpower(20);
 	KEYDOWN 
-	delay(995);
+	delay(895);
 	KEYUP
 	txoff();
 	setpower(50);

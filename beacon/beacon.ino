@@ -90,6 +90,19 @@ void setup()  {
 	pinMode(BLBLUE , OUTPUT);
 	pinMode(BLGREEN, OUTPUT);
 	pinMode(BLRED,   OUTPUT);   
+	//  use analog pins for LA tracing
+	pinMode(A0, OUTPUT);
+	pinMode(A1, OUTPUT);
+	pinMode(A2, OUTPUT);
+	pinMode(A3, OUTPUT);
+	pinMode(A4, OUTPUT);
+	pinMode(A6, OUTPUT);
+	digitalWrite(A0,LOW);
+	digitalWrite(A1,LOW);
+	digitalWrite(A2,LOW);
+	digitalWrite(A3,LOW);
+	digitalWrite(A4,LOW);
+	digitalWrite(A5,LOW);
 	
 	FPBLBLUE
 	fp_lcd.init();

@@ -72,6 +72,7 @@ int radioSetup() {
 }
 
 void setband(byte meters) {
+	digitalWrite(A1,HIGH);
   debug_print(F("Set band to "));
   debug_print_dec(meters);
   debug_println(F("M") );
@@ -104,6 +105,7 @@ void setband(byte meters) {
   }
   radio.set_freq(newFreq);  
   id_sent = false;
+	digitalWrite(A1,LOW);
 }
 
 void setRadioMode(rMode Mode) {
@@ -116,11 +118,13 @@ void setpower(byte dBm) {
   // 1W = 30dBm
   // 100mW = 20dBm
   uint16_t newPow;
+	digitalWrite(A1,HIGH);
   FPPRINTRC(1,11,dBm);
   FPPRINTRC(1,13,"dBm");
   debug_print(F("Set power to ") );
   debug_print_dec(dBm);
   debug_println(F("dBm") );
+	digitalWrite(A1,LOW);
 	digitalWrite(ALC_PWR, LOW);
   switch (dBm) {
     case 50:  // 50 dBm = 100 watts
@@ -141,7 +145,9 @@ void setpower(byte dBm) {
       newPow = 0;
       break;
   }
+	digitalWrite(A2,HIGH);
   radio.adjustSliders(rfPower,newPow);
+	digitalWrite(A2,LOW);
 }
 
 void setRawPwr(byte newPow) {

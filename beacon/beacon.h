@@ -31,7 +31,7 @@
 #define GPSTxD 11  
 
 // radio (CI-V) defines
-#define radio_baudrate 4800
+#define radio_baudrate 19200
 #define CIV_CA 0xE0
 #define CIV_RA 0x76
 #define RADIO_RETRY_LIMIT 10  // # of times to init radio, before giving up
