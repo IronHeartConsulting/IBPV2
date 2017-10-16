@@ -26,7 +26,7 @@ int schedule_ticks = 255;
 int slotNotFound = 1;
 int remainingSkipCount;    // count down counter of 3 min cycles we are skipping
 int skipEnabled = 0;		// boolean flag - Skip TX enable
-byte TXEnabled = 0;
+byte TXEnabled = 0;		// flag - are we transmitting - used to determine how to update LCD Display
 
 // RxD, TxD
 SoftwareSerial gps_serial(GPSRxD, GPSTxD);

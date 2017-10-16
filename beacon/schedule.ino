@@ -16,7 +16,10 @@ void handle_tick() {
 	debug_print(F("Schedule: wall_ticks=")); debug_print_dec(wall_ticks);
 	debug_print(F(" schedule_ticks=")); debug_println_dec(schedule_ticks);
 	if (slotNotFound) {
-		if ((wall_ticks - stations[slotindex].start_time) == -2) {
+		if ( ((wall_ticks - stations[slotindex].start_time) == -2) ||
+				/* special case for slot 0 (4U1UN) as our formula breaks */
+			 ((wall_ticks == 178) && (stations[slotindex].start_time == 0))
+		){
 			slotNotFound = 0;
 			schedule_ticks = 178;
 		}
@@ -120,27 +123,26 @@ void runBand(byte band) {
 	delay(startDelay); 
 	FPBLRED
     send_id();
-// no delay needed, as the CW routines will insert a 3 dit space at the end of the message!
-//	delay(218);
+#define LONG_DASH_DELAY 691
+//  add 4 dit time delay for a total of 7
+	delay(218);
 	// 1st long dash 100 watts
 	KEYDOWN 
-	delay(895);
-	KEYUP
+	delay(LONG_DASH_DELAY);
+//  KEY UP done in setpower, so we can overlap with display update
+//****	KEYUP
 	// 2nd long dash 10 watts
 	setpower(40);
 	KEYDOWN 
-	delay(895);
-	KEYUP
+	delay(LONG_DASH_DELAY);
 	// 3rd long dash 1 watt
 	setpower(30);
 	KEYDOWN 
-	delay(895);
-	KEYUP
+	delay(LONG_DASH_DELAY);
 	// 4th long dash 100 milliwatts
 	setpower(20);
 	KEYDOWN 
-	delay(895);
-	KEYUP
+	delay(LONG_DASH_DELAY);
 	txoff();
 	setpower(50);
 	FPPRINTRC(1,7,F("         "));

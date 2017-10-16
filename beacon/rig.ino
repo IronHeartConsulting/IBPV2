@@ -117,9 +117,12 @@ void setpower(byte dBm) {
   // 10W = 40dBm
   // 1W = 30dBm
   // 100mW = 20dBm
+// we update display with new pwoer level, set CW off, then program radio with new power level
+//   allows overlap of sending a long dash, with updating the LCD disp;ay
   uint16_t newPow;
 	digitalWrite(A1,HIGH);
   FPPRINTRC(1,11,dBm);
+	KEYUP
   FPPRINTRC(1,13,"dBm");
   debug_print(F("Set power to ") );
   debug_print_dec(dBm);
