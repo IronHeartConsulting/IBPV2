@@ -12,7 +12,7 @@
 #define debug_println_dec(x)
 #define debug_print(x)
 #define debug_print_dec(x)
-#define debug_newline(x) Serial.println()
+#define debug_newline(x) 
 #endif
 
 #endif

@@ -31,6 +31,11 @@ void handle_tick() {
   case 160:
     // not beaconing, so do GPS clock discipline.
     gps_discipline_clock(32768);
+	uptime++;   // number of times we've beaconed
+	debug_print(F("uptime="));
+	debug_println_dec(uptime);
+	if (uptime > MAX_UPTIME)
+		reboot();  // we won't come back from this...
     break;
 
   case 179:

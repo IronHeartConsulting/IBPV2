@@ -51,6 +51,13 @@
 #define KEYDOWN digitalWrite(CWLINE,HIGH);
 #define KEYUP   digitalWrite(CWLINE,LOW);
 
+//   max uptime before reboot
+//  one day - 1440 minutes / day - 60 minutes/hour * 24 hours
+//   3 minuted per beaocn cycle
+//   one of cycles = 1440 / 3 = 480
+#define MAX_UPTIME 480
+//  #define MAX_UPTIME 10  //  30 minutes as a test
+
 enum rMode {beaconMode = 0, PSK31Mode = 1};
 
 // EEPROM layout

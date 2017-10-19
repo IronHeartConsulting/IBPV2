@@ -62,6 +62,9 @@ volatile int last_millis = 0;
 // set on id send, reset on band change.  prevents starting up in the middle of the schedule.
 volatile boolean id_sent = false;
 
+// count of beaocn cycles - used to decide if time to reboot
+volatile int uptime;
+
 // tick interrupt
 // keep track of wall_ticks; use GPS PPS to discipline millis_per_second when it's safe to do so (no interrupts masked).
 void tick() {
@@ -201,6 +204,7 @@ void setup()  {
 	FPPRINTRC(0,6,stations[slotindex].call);
 	FPPRINTRC(0,13,stations[slotindex].start_time);
 	FPBLGREEN
+	uptime = 0;
 
 
 }
