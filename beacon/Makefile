@@ -1,8 +1,8 @@
 ARDUINO=/Applications/Arduino_164.app/Contents/MacOS
 # ARDUINO=/Applications/Arduino.app/Contents/MacOS
 IBPV2='/Users/kevin/working/Ham Radio/IBPV2_VE8AT_version/beacon'
-VERSION=2_9a
-VERSION_P="2.9a"
+VERSION=2_9b
+VERSION_P="2.9b"
 # BUILD_FLAGS=--verify -v
 BUILD_FLAGS=--verify
 PREF_BUILD_PATH=--pref build.path=$(IBPV2)/build
